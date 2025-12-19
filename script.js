@@ -10,30 +10,35 @@ const firstPoint = document.querySelector('.point .point-content');
 
 let ticking = false;
 
+// FIX: Removed scroll lock - let browser handle scroll naturally
 function smoothParallax() {
   const scrollY = window.scrollY;
 
-  // Get positions
-  const imageRect = imageReveal.getBoundingClientRect();
-  const imageBottom = scrollY + imageRect.bottom;
-  const titleRect = heroTitle.getBoundingClientRect();
-  const taglineRect = heroTagline.getBoundingClientRect();
+  // Safety check - only run if elements exist
+  if (!heroTitle || !heroTagline || !heroImage || !imageReveal) {
+    return;
+  }
 
-  // 1. MOVE TITLE + TAGLINE TOGETHER
-  const translation = scrollY * 1.2;
+  // Get positions FIRST
+  const imageRect = imageReveal.getBoundingClientRect();
+  const imageBottom = imageRect.bottom + scrollY; // Absolute position
+  
+  // 1. MOVE TITLE + TAGLINE TOGETHER (FAST through image)
+  const maxTranslation = imageBottom - 200; // Stop 200px before image ends
+  const translation = Math.min(scrollY * 2.2, maxTranslation); // FAST: 2.2x speed - perfect balance
   heroTitle.style.transform = `translateY(${translation}px)`;
   heroTagline.style.transform = `translateY(${translation}px)`;
-
-  // 2. FADE OUT AS APPROACHING IMAGE BOTTOM
-  // Calculate distance from bottom of image
-  const fadeZoneHeight = 700; // Start fading 400px before image bottom
-  const distanceFromImageBottom = imageBottom - scrollY;
   
-  if (distanceFromImageBottom < fadeZoneHeight) {
-    // Calculate opacity based on distance (1 at top, 0 at bottom)
-    const opacity = Math.max(0, distanceFromImageBottom / fadeZoneHeight);
-    heroTitle.style.opacity = opacity;
-    heroTagline.style.opacity = opacity;
+  // Get updated positions AFTER transform
+  const titleRect = heroTitle.getBoundingClientRect();
+  const taglineRect = heroTagline.getBoundingClientRect();
+  const titleBottom = titleRect.bottom + scrollY; // Absolute position after transform
+
+  // 2. DISAPPEAR AT END OF IMAGE
+  // Hide title/tagline when they reach the BOTTOM of the image
+  if (titleBottom >= imageBottom) {
+    heroTitle.style.opacity = 0;
+    heroTagline.style.opacity = 0;
   } else {
     heroTitle.style.opacity = 1;
     heroTagline.style.opacity = 1;
@@ -65,19 +70,35 @@ function smoothParallax() {
     heroTagline.style.textShadow = "none";
   }
 
-  // 6. IMAGE ONLY ZOOMS IN - NO VERTICAL MOVEMENT
-  const scale = 1 + Math.min(scrollY / 2000, 0.2); // Only zoom in, no translateY
+  // 6. IMAGE ZOOM + WIDTH EXPANSION + BORDER RADIUS
+  const imageScrollMultiplier = 1.0; // Balanced: Natural, smooth zoom
+  const effectiveScroll = scrollY * imageScrollMultiplier;
+  
+  // Scale (zoom in)
+  const scale = 1 + Math.min(effectiveScroll / 2000, 0.2);
+  
+  // Width expansion: starts at 80%, expands to 100%
+  const startWidth = 80; // Start at 80% width
+  const endWidth = 100;   // End at 100% width
+  const widthProgress = Math.min(effectiveScroll / 800, 1); // Expands over 800px of scroll
+  const currentWidth = startWidth + (endWidth - startWidth) * widthProgress;
+  
+  // Border radius: starts at 20px, goes to 0px (square corners)
+  const startRadius = 20;
+  const endRadius = 0;
+  const currentRadius = startRadius - (startRadius - endRadius) * widthProgress;
+  
   heroImage.style.transform = `scale(${scale})`;
+  heroImage.style.width = `${currentWidth}%`;
+  heroImage.style.borderRadius = `${currentRadius}px`;
 
-  // 7. SHOW FIRST POINT CONTENT WHEN TITLE FADES
-  if (distanceFromImageBottom < fadeZoneHeight) {
-    firstPoint.classList.add('visible');
-  }
+  // 7. SHOW FIRST POINT CONTENT (removed - now handled in step 2)
+  // The "Your Next Step" title emergence is now controlled above
 
   ticking = false;
 }
 
-// Smooth optimized scroll listener
+// FIX: Use passive listener - doesn't block scroll
 window.addEventListener(
   "scroll",
   () => {
@@ -86,20 +107,71 @@ window.addEventListener(
       ticking = true;
     }
   },
-  { passive: true }
+  { passive: true } // CRITICAL: Passive listener doesn't block scroll
 );
 
-// Resize recalculates
+// Resize recalculates (also passive)
 window.addEventListener("resize", () => {
   requestAnimationFrame(smoothParallax);
-});
+}, { passive: true });
 
-// Initial call
-smoothParallax();
+// Initial call with safety check
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', smoothParallax);
+} else {
+  smoothParallax();
+}
 
+// Newsletter form handler
 function handleNewsletter(event) {
     event.preventDefault();
     const email = event.target.querySelector('input').value;
     alert(`Thank you for subscribing with ${email}!`);
     event.target.reset();
 }
+
+// Make function globally available
+window.handleNewsletter = handleNewsletter;
+
+// Mobile menu toggle
+document.addEventListener('DOMContentLoaded', function() {
+    const nav = document.querySelector('nav ul');
+    const hamburger = document.createElement('button');
+    hamburger.className = 'mobile-menu-toggle';
+    hamburger.innerHTML = '<span></span><span></span><span></span>';
+    hamburger.setAttribute('aria-label', 'Toggle menu');
+    
+    const navdiv = document.querySelector('.navdiv');
+    if (navdiv && nav) {
+        navdiv.insertBefore(hamburger, nav);
+        
+        // Toggle menu on hamburger click
+        hamburger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            nav.classList.toggle('mobile-open');
+            this.classList.toggle('active');
+            document.body.classList.toggle('menu-open');
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (nav.classList.contains('mobile-open') && 
+                !nav.contains(e.target) && 
+                !hamburger.contains(e.target)) {
+                nav.classList.remove('mobile-open');
+                hamburger.classList.remove('active');
+                document.body.classList.remove('menu-open');
+            }
+        });
+        
+        // Close menu when clicking a nav link
+        const navLinks = nav.querySelectorAll('a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                nav.classList.remove('mobile-open');
+                hamburger.classList.remove('active');
+                document.body.classList.remove('menu-open');
+            });
+        });
+    }
+});
