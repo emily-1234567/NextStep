@@ -16,125 +16,157 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Check if user is logged in
-function checkAuth() {
-  onAuthStateChanged(auth, (user) => {
-    const navList = document.querySelector('.navdiv ul');
-    
-    if (user && navList) {
-      // User is logged in - remove login button
-      const loginLink = navList.querySelector('a[href="login.html"]');
-      if (loginLink) {
-        loginLink.parentElement.remove();
-      }
-      
-      // Add user profile dropdown
-      const existingProfile = navList.querySelector('.user-profile');
-      if (!existingProfile) {
-        const profileItem = document.createElement('li');
-        profileItem.className = 'navbar-item user-profile';
-        
-        // Get user initials or photo
-        const displayName = user.displayName || user.email;
-        const initials = getInitials(displayName);
-        const photoURL = user.photoURL;
-        
-profileItem.innerHTML = `
-  <div class="profile-wrapper">
-    <button class="profile-button" onclick="toggleProfileMenu(event)">
-      ${photoURL 
-        ? `<img src="${photoURL}" alt="Profile" class="profile-image">` 
-        : `<div class="profile-initials">${initials}</div>`
-      }
-      <span class="profile-name">${displayName.split(' ')[0]}</span>
-      <span class="dropdown-arrow">▼</span>
-    </button>
-    <div class="profile-dropdown" id="profile-dropdown">
-      <div class="dropdown-header">
-        <div class="dropdown-user-info">
-          <strong>${displayName}</strong>
-          <span class="dropdown-email">${user.email}</span>
-        </div>
-      </div>
-      <div class="dropdown-divider"></div>
-      <a href="profile.html" class="dropdown-item">
-        <span>👤</span> My Profile
-      </a>
-      <a href="badges.html" class="dropdown-item">
-        <span>🏆</span> My Badges
-      </a>
-      <a href="settings.html" class="dropdown-item">
-        <span>⚙️</span> Settings
-      </a>
-      <div class="dropdown-divider"></div>
-      <a href="#" class="dropdown-item logout" onclick="logout(event)">
-        <span>🚪</span> Logout
-      </a>
-    </div>
-  </div>
-`;
-navList.appendChild(profileItem);
-      }
-    } else if (navList && !navList.querySelector('a[href="login.html"]')) {
-      // User not logged in - show login button
-      const userProfile = navList.querySelector('.user-profile');
-      if (userProfile) {
-        userProfile.remove();
-      }
-      
-      const loginItem = document.createElement('li');
-      loginItem.className = 'navbar-item';
-      loginItem.innerHTML = '<a href="login.html" class="login">Login</a>';
-      navList.appendChild(loginItem);
-    }
-  });
-}
+// Export auth for use in other files
+window.firebaseAuth = auth;
 
 // Get initials from name
 function getInitials(name) {
-  const parts = name.split(' ');
+  if (!name) return 'U';
+  const parts = name.trim().split(' ');
   if (parts.length >= 2) {
-    return (parts[0][0] + parts[1][0]).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   }
   return name.substring(0, 2).toUpperCase();
 }
 
-// Toggle profile dropdown
-window.toggleProfileMenu = function(event) {
-  event.stopPropagation();
-  const dropdown = document.getElementById('profile-dropdown');
-  dropdown.classList.toggle('show');
+// Check authentication and update navigation
+function checkAuth() {
+  onAuthStateChanged(auth, (user) => {
+    const loginLink = document.querySelector('.login');
+    
+    if (user && loginLink) {
+      // User is logged in - replace login with profile dropdown
+      const displayName = user.displayName || user.email.split('@')[0];
+      const initials = getInitials(displayName);
+      const photoURL = user.photoURL;
+      const firstName = displayName.split(' ')[0];
+      
+      // Save user data to localStorage for profile page
+      try {
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('userName', displayName);
+        localStorage.setItem('userEmail', user.email);
+        localStorage.setItem('userPhotoURL', photoURL || '');
+        localStorage.setItem('userId', user.uid);
+        if (!localStorage.getItem('memberSince')) {
+          localStorage.setItem('memberSince', user.metadata.creationTime || new Date().toISOString());
+        }
+      } catch (e) {
+        console.error('Error saving user data:', e);
+      }
+      
+      // Replace login button with profile dropdown
+      const navItem = loginLink.closest('.navbar-item');
+      navItem.innerHTML = `
+        <div class="profile-dropdown">
+          <button class="profile-btn" onclick="toggleProfileMenu()">
+            ${photoURL 
+              ? `<img src="${photoURL}" alt="Profile" class="profile-photo-nav">` 
+              : `<span class="profile-initials">${initials}</span>`
+            }
+            <span class="profile-name">${firstName}</span>
+            <span class="dropdown-arrow">▼</span>
+          </button>
+          <div class="profile-menu" id="profile-menu">
+            <div class="profile-menu-header">
+              <strong>${displayName}</strong>
+              <span class="profile-menu-email">${user.email}</span>
+            </div>
+            <div class="profile-menu-divider"></div>
+            <a href="profile.html" class="profile-menu-item">
+              <span class="menu-icon">👤</span> My Profile
+            </a>
+            <a href="profile.html#settings" class="profile-menu-item">
+              <span class="menu-icon">⚙️</span> Settings
+            </a>
+            <a href="badges.html" class="profile-menu-item">
+              <span class="menu-icon">🏆</span> Badges
+            </a>
+            <div class="profile-menu-divider"></div>
+            <a href="#" onclick="logout(event)" class="profile-menu-item logout">
+              <span class="menu-icon">🚪</span> Logout
+            </a>
+          </div>
+        </div>
+      `;
+    } else if (!user) {
+      // User not logged in - clear any saved data
+      try {
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userPhotoURL');
+        localStorage.removeItem('userId');
+      } catch (e) {
+        console.error('Error clearing data:', e);
+      }
+      
+      // Ensure login button exists
+      const navList = document.querySelector('.navdiv ul');
+      const existingLogin = navList?.querySelector('a[href="login.html"]');
+      if (navList && !existingLogin) {
+        const loginItem = document.createElement('li');
+        loginItem.className = 'navbar-item';
+        loginItem.innerHTML = '<a href="login.html" class="login">Login</a>';
+        navList.appendChild(loginItem);
+      }
+      
+      // Redirect to login if on protected page
+      const currentPage = window.location.pathname.split('/').pop();
+      const protectedPages = ['profile.html', 'badges.html'];
+      if (protectedPages.includes(currentPage)) {
+        window.location.href = 'login.html';
+      }
+    }
+  });
+}
+
+// Toggle profile dropdown menu
+window.toggleProfileMenu = function() {
+  const menu = document.getElementById('profile-menu');
+  if (menu) {
+    menu.classList.toggle('show');
+  }
 };
 
 // Close dropdown when clicking outside
 document.addEventListener('click', function(event) {
-  const dropdown = document.getElementById('profile-dropdown');
-  if (dropdown && !event.target.closest('.profile-wrapper')) {
-    dropdown.classList.remove('show');
+  const dropdown = document.querySelector('.profile-dropdown');
+  if (dropdown && !dropdown.contains(event.target)) {
+    const menu = document.getElementById('profile-menu');
+    if (menu) {
+      menu.classList.remove('show');
+    }
   }
 });
 
-window.viewProfile = function(event) {
-    event.preventDefault();
-    window.location.href = "profile.html";
-};
-
-window.viewSettings = function(event) {
-    event.preventDefault(); 
-    window.location.href = "profile.html#settings";
-};
-
 // Logout function
 window.logout = async function(event) {
-  event.preventDefault();
-  try {
-    await signOut(auth);
-    window.location.href = 'index.html';
-  } catch (error) {
-    console.error('Error signing out:', error);
-    alert('Error signing out. Please try again.');
+  if (event) {
+    event.preventDefault();
+  }
+  
+  if (confirm('Are you sure you want to logout?')) {
+    try {
+      await signOut(auth);
+      
+      // Clear all saved data
+      try {
+        localStorage.clear();
+      } catch (e) {
+        console.error('Error clearing data:', e);
+      }
+      
+      window.location.href = 'index.html';
+    } catch (error) {
+      console.error('Error signing out:', error);
+      alert('Error signing out. Please try again.');
+    }
   }
 };
 
-// Initialize
+// Make functions globally available
+window.getInitials = getInitials;
+
+// Initialize authentication check
 checkAuth();
