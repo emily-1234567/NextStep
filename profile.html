@@ -15,7 +15,11 @@
     <nav>
         <div class="navbar">
             <div class="navdiv">
-                <div class="logo"><a href="index.html">NEXTSTEP</a></div>
+               <div class="logo">
+  <a href="index.html">
+    <img src="logo.png" alt="NextStep Logo" class="logo-image">
+  </a>
+</div>
                 <ul id="nav-menu">
                     <li class="navbar-item"><a href="index.html">Home</a></li>
                     <li class="navbar-item"><a href="map.html">Map</a></li>
@@ -33,7 +37,9 @@
         <div class="container">
             <!-- Page Header -->
             <div class="page-header">
-                <button class="back-btn" onclick="window.location.href='index.html'">← Back to Home</button>
+                <button class="back-btn" onclick="window.location.href='index.html'">
+                    ← Back to Home
+                </button>
                 <h1>My Account</h1>
                 <div style="width: 100px;"></div>
             </div>
@@ -52,7 +58,7 @@
                     <div class="profile-header">
                         <div class="profile-photo-container">
                             <div class="profile-initials-large" id="profile-initials-large">JD</div>
-                            <label for="photo-input" class="photo-overlay"></label>
+                            <label for="photo-input" class="photo-overlay" title="Change photo"></label>
                             <input type="file" id="photo-input" accept="image/*">
                         </div>
                         <div class="profile-name-display" id="profile-name-display">Loading...</div>
@@ -169,47 +175,67 @@
                     <div class="settings-section">
                         <h2>Recent Activity</h2>
                         <div class="info-card" style="margin-bottom: 15px;">
-                            <div class="info-card-label">Town Hall Meeting</div>
-                            <div class="info-card-value">Attended • November 21, 2025</div>
+                            <div class="info-card-label">December 5, 2025</div>
+                            <div class="info-card-value">Youth Leadership Workshop</div>
+                            <div class="toggle-description" style="margin-top: 8px;">Registered for upcoming event</div>
                         </div>
                         <div class="info-card" style="margin-bottom: 15px;">
-                            <div class="info-card-label">Youth Leadership Workshop</div>
-                            <div class="info-card-value">Registered • December 5, 2025</div>
+                            <div class="info-card-label">November 21, 2025</div>
+                            <div class="info-card-value">Town Hall Meeting</div>
+                            <div class="toggle-description" style="margin-top: 8px;">Attended • 2 hours</div>
                         </div>
                         <div class="info-card" style="margin-bottom: 15px;">
-                            <div class="info-card-label">Beach Clean-Up Day</div>
-                            <div class="info-card-value">Volunteered • November 15, 2025</div>
+                            <div class="info-card-label">November 15, 2025</div>
+                            <div class="info-card-value">Beach Clean-Up Day</div>
+                            <div class="toggle-description" style="margin-top: 8px;">Volunteered • 4 hours</div>
+                        </div>
+                        <div class="info-card" style="margin-bottom: 15px;">
+                            <div class="info-card-label">November 8, 2025</div>
+                            <div class="info-card-value">Community Garden Project</div>
+                            <div class="toggle-description" style="margin-top: 8px;">Volunteered • 3 hours</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-label">October 28, 2025</div>
+                            <div class="info-card-value">Civic Engagement Workshop</div>
+                            <div class="toggle-description" style="margin-top: 8px;">Completed • Earned badge</div>
                         </div>
                     </div>
 
-                <div class="settings-section">
-                    <h2>Badges & Achievements</h2>
-                    <div class="stats-grid">
-                        <div class="info-card" style="text-align: center;">
-                            <div style="font-size: 40px; margin-bottom: 10px;">🏆</div>
-                            <div class="info-card-label">8 Badges Earned</div>
+                    <div class="settings-section">
+                        <h2>Badges & Achievements</h2>
+                        <div class="stats-grid">
+                            <div class="info-card" style="text-align: center;">
+                                <div style="font-size: 40px; margin-bottom: 10px;">🏆</div>
+                                <div class="info-card-value" style="margin-bottom: 5px;">8 Badges</div>
+                                <div class="info-card-label">Total Earned</div>
+                            </div>
+                            <div class="info-card" style="text-align: center;">
+                                <div style="font-size: 40px; margin-bottom: 10px;">⭐</div>
+                                <div class="info-card-value" style="margin-bottom: 5px;">53%</div>
+                                <div class="info-card-label">Progress</div>
+                            </div>
+                            <div class="info-card" style="text-align: center;">
+                                <div style="font-size: 40px; margin-bottom: 10px;">🎯</div>
+                                <div class="info-card-value" style="margin-bottom: 5px;">7 More</div>
+                                <div class="info-card-label">To Unlock</div>
+                            </div>
                         </div>
-                        <div class="info-card" style="text-align: center;">
-                            <div style="font-size: 40px; margin-bottom: 10px;">⭐</div>
-                            <div class="info-card-label">53% Complete</div>
-                        </div>
-                        <div class="info-card" style="text-align: center;">
-                            <div style="font-size: 40px; margin-bottom: 10px;">🌟</div>
-                            <div class="info-card-label">15 Total Badges</div>
+                        <div style="text-align: center; margin-top: 20px;">
+                            <a href="badges.html" class="btn-primary" style="text-decoration: none; display: inline-block;">
+                                View All Badges →
+                            </a>
                         </div>
                     </div>
-                    <div style="text-align: center; margin-top: 20px;">
-                        <a href="badges.html" class="btn-primary" style="text-decoration: none; display: inline-block;">
-                            View All Badges →
-                        </a>
-                    </div>
-                </div>            
+                </div>
             </div>
         </div>
     </main>
     
-    <!-- Load scripts in correct order -->
+    <!-- Load Firebase Auth first -->
     <script type="module" src="auth-check.js"></script>
-    <script src="profile.js"></script>
+    <!-- Then load profile-specific JavaScript -->
+    <script type="module" src="profile.js"></script>
+    <!-- Firebase Auth with Profile Dropdown -->
+<script type="module" src="auth-check.js"></script>
 </body>
 </html>
