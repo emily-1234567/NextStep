@@ -268,6 +268,181 @@ function formatDate(dateString) {
     }
 }
 
+// Load badge and event statistics
+function loadBadgeStatistics() {
+    try {
+        // Load user progress from localStorage
+        const saved = localStorage.getItem('userProgress');
+        const userProgress = saved ? JSON.parse(saved) : {
+            eventsAttended: 0,
+            volunteeredHours: 0
+        };
+        
+        // Badge definitions (same as badges.js)
+        const badges = [
+            { progressKey: "eventsAttended", required: 1 },
+            { progressKey: "eventsAttended", required: 5 },
+            { progressKey: "eventsAttended", required: 10 },
+            { progressKey: "eventsAttended", required: 25 },
+            { progressKey: "volunteeredHours", required: 1 },
+            { progressKey: "volunteeredHours", required: 10 },
+            { progressKey: "volunteeredHours", required: 50 },
+            { progressKey: "townHallSpeeches", required: 1 },
+            { progressKey: "environmentalEvents", required: 3 },
+            { progressKey: "youthEvents", required: 5 },
+            { progressKey: "innovationSummits", required: 3 },
+            { progressKey: "earlyRegistrations", required: 1 },
+            { progressKey: "consecutiveMonths", required: 3 },
+            { progressKey: "friendsInvited", required: 5 },
+            { progressKey: "isFoundingMember", required: 1 },
+            { progressKey: "eventsCreated", required: 1 },
+            { progressKey: "electionsVoted", required: 3 },
+            { progressKey: "serviceProjects", required: 5 },
+            { progressKey: "networkConnections", required: 25 },
+            { progressKey: "sustainabilityInitiatives", required: 10 }
+        ];
+        
+        // Calculate earned badges
+        let earnedCount = 0;
+        badges.forEach(badge => {
+            const progress = badge.progressKey === 'isFoundingMember' 
+                ? (userProgress[badge.progressKey] ? 1 : 0)
+                : (userProgress[badge.progressKey] || 0);
+            
+            if (progress >= badge.required) {
+                earnedCount++;
+            }
+        });
+        
+        const totalBadges = badges.length;
+        const completionPercent = Math.round((earnedCount / totalBadges) * 100);
+        const remainingBadges = totalBadges - earnedCount;
+        
+        // Update Profile Tab stats
+        const profileStatCards = document.querySelectorAll('.stats-grid .stat-card');
+        if (profileStatCards.length >= 3) {
+            profileStatCards[0].querySelector('.stat-number').textContent = userProgress.eventsAttended || 0;
+            profileStatCards[1].querySelector('.stat-number').textContent = earnedCount;
+            const hours = userProgress.volunteeredHours || 0;
+            profileStatCards[2].querySelector('.stat-number').textContent = hours + 'h';
+        }
+        
+        // Update Activity Tab badge stats
+        const activityInfoCards = document.querySelectorAll('#activity-tab .stats-grid .info-card');
+        if (activityInfoCards.length >= 3) {
+            activityInfoCards[0].querySelector('.info-card-value').textContent = earnedCount + ' Badges';
+            activityInfoCards[1].querySelector('.info-card-value').textContent = completionPercent + '%';
+            activityInfoCards[2].querySelector('.info-card-value').textContent = remainingBadges + ' More';
+        }
+        
+        console.log('Badge statistics loaded:', { earnedCount, totalBadges, completionPercent });
+    } catch (e) {
+        console.error('Error loading badge statistics:', e);
+    }
+}
+
+// Load recent activity from completed events
+function loadRecentActivity() {
+    try {
+        // Get completed events
+        const completedEventsIds = JSON.parse(localStorage.getItem('completedEvents') || '[]');
+        
+        // Events data (same as events.js)
+        const eventsData = [
+            {
+                id: 'event-1',
+                title: "Town Hall Meeting",
+                date: "November 21, 2025",
+                category: "political",
+                volunteeredHours: 0
+            },
+            {
+                id: 'event-2',
+                title: "Youth Leadership Workshop",
+                date: "December 5, 2025",
+                category: "youth",
+                volunteeredHours: 0
+            },
+            {
+                id: 'event-3',
+                title: "Tech Innovation Summit",
+                date: "December 10, 2025",
+                category: "innovation",
+                volunteeredHours: 0
+            },
+            {
+                id: 'event-4',
+                title: "Beach Clean-Up Day",
+                date: "December 15, 2025",
+                category: "environmental",
+                volunteeredHours: 2
+            },
+            {
+                id: 'event-5',
+                title: "Education Forum",
+                date: "December 20, 2025",
+                category: "education",
+                volunteeredHours: 0
+            },
+            {
+                id: 'event-6',
+                title: "City Council Meeting",
+                date: "January 5, 2026",
+                category: "political",
+                volunteeredHours: 0
+            },
+            {
+                id: 'event-7',
+                title: "Community Garden Project",
+                date: "January 12, 2026",
+                category: "environmental",
+                volunteeredHours: 3
+            }
+        ];
+        
+        // Filter completed events and sort by date (most recent first)
+        const completedEvents = eventsData
+            .filter(event => completedEventsIds.includes(event.id))
+            .sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        // Get the activity section
+        const activitySection = document.querySelector('#activity-tab .settings-section');
+        if (!activitySection) return;
+        
+        // Build the HTML for completed events
+        let activityHTML = '<h2>Recent Activity</h2>';
+        
+        if (completedEvents.length === 0) {
+            activityHTML += `
+                <div class="info-card">
+                    <div class="info-card-value">No activities yet</div>
+                    <div class="toggle-description" style="margin-top: 8px;">Complete events to see your activity here!</div>
+                </div>
+            `;
+        } else {
+            completedEvents.forEach(event => {
+                const activityType = event.volunteeredHours > 0 
+                    ? `Volunteered • ${event.volunteeredHours} hours` 
+                    : 'Attended';
+                
+                activityHTML += `
+                    <div class="info-card" style="margin-bottom: 15px;">
+                        <div class="info-card-label">${event.date}</div>
+                        <div class="info-card-value">${event.title}</div>
+                        <div class="toggle-description" style="margin-top: 8px;">${activityType}</div>
+                    </div>
+                `;
+            });
+        }
+        
+        activitySection.innerHTML = activityHTML;
+        
+        console.log('Recent activity loaded:', completedEvents.length + ' events');
+    } catch (e) {
+        console.error('Error loading recent activity:', e);
+    }
+}
+
 // Load user data from Firebase
 function loadUserData() {
     const user = auth.currentUser;
@@ -387,6 +562,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (user) {
             // Load user data
             loadUserData();
+            
+            // Load badge statistics
+            loadBadgeStatistics();
+            
+            // Load recent activity
+            loadRecentActivity();
             
             // Setup photo upload
             setupPhotoUpload();

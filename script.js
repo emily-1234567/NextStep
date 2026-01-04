@@ -6,8 +6,12 @@ const heroTitle = document.getElementById('heroTitle'); // Main hero title eleme
 const heroTagline = document.getElementById('heroTagline'); // Hero tagline/subtitle element
 const heroSection = document.getElementById('hero'); // Hero section container
 const imageReveal = document.getElementById('revealSection'); // Image reveal section
-const heroImage = document.getElementById('heroImage'); // The hero image itself
+const heroImage = document.getElementById('heroImage'); // The hero image/video itself
 const firstPoint = document.querySelector('.point .point-content'); // First content point section
+
+// CRITICAL: Check if heroImage is an iframe (video) or img (image)
+// This determines which transform method to use (video needs centering transform)
+const isVideo = heroImage && heroImage.tagName === 'IFRAME';
 
 // Flag to prevent multiple animation frames from running simultaneously
 let ticking = false;
@@ -104,12 +108,14 @@ function smoothParallax() {
 
 
 
-  // 6. IMAGE ZOOM + WIDTH EXPANSION + BORDER RADIUS
+  // 6. IMAGE/VIDEO ZOOM + WIDTH EXPANSION + BORDER RADIUS
   const imageScrollMultiplier = 1.0; // Scroll speed multiplier for image effects
   const effectiveScroll = scrollY * imageScrollMultiplier; // Calculate effective scroll amount
   
-  // Scale (zoom in) - image gets larger as you scroll
-  const scale = 1 + Math.min(effectiveScroll / 2000, 0.2); // Zoom up to 20% larger over 2000px
+  // Scale (zoom in) - image/video gets larger as you scroll
+  // CRITICAL: For video, start at 1.3 to crop out YouTube's black bars
+  const baseScale = isVideo ? 1.3 : 1; // Videos start zoomed in 30% to hide letterboxing
+  const scale = baseScale + Math.min(effectiveScroll / 2000, 0.2); // Zoom up to 20% more over 2000px
   
   // Width expansion: starts at 80%, expands to 100%
   const startWidth = 80; // Starting width percentage
@@ -122,10 +128,20 @@ function smoothParallax() {
   const endRadius = 0; // Ending border radius (square)
   const currentRadius = startRadius - (startRadius - endRadius) * widthProgress; // Calculate current radius
   
-  // Apply all transformations to the image
-  heroImage.style.transform = `scale(${scale})`; // Apply zoom
-  heroImage.style.width = `${currentWidth}%`; // Apply width
-  heroImage.style.borderRadius = `${currentRadius}px`; // Apply border radius
+  // CRITICAL: Apply transformations differently for video vs image
+  if (isVideo) {
+    // For iframe video: MUST include centering transform + scale
+    // translate(-50%, -50%) keeps video centered as it scales
+    heroImage.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    heroImage.style.width = `${currentWidth}%`; // Apply width expansion
+    heroImage.style.height = `${currentWidth}%`; // Keep aspect ratio by matching width
+    heroImage.style.borderRadius = `${currentRadius}px`; // Apply border radius
+  } else {
+    // For regular image: just scale (no centering needed)
+    heroImage.style.transform = `scale(${scale})`; // Apply zoom
+    heroImage.style.width = `${currentWidth}%`; // Apply width
+    heroImage.style.borderRadius = `${currentRadius}px`; // Apply border radius
+  }
 
   // Reset ticking flag to allow next animation frame
   ticking = false;

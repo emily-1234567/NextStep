@@ -218,7 +218,7 @@
 
 /* Image Reveal Section */
 .image-reveal {
-  /* Container for hero image that expands on scroll */
+  /* Container for hero image/video that expands on scroll */
   
   height: 80vh;
   /* 80% of viewport height
@@ -249,11 +249,15 @@
   /* Block-level element
      Takes full width available
      Default for sections but explicit for clarity */
+     
+  background: #000;
+  /* CRITICAL: Black background prevents YouTube's black bars from showing
+     Fills space while video loads */
 }
 
 /* Hero Media Wrapper */
 .hero-media {
-  /* Wrapper for hero image */
+  /* Wrapper for hero image/video */
   
   width: 100%;
   height: 100%;
@@ -262,6 +266,10 @@
   margin: 0;
   padding: 0;
   /* Removes spacing */
+     
+  position: relative;
+  /* CRITICAL: Creates positioning context for absolute iframe
+     Allows iframe to be centered within this container */
      
   display: flex;
   /* Flexbox layout - enables centering
@@ -278,21 +286,60 @@
   /* Hides overflow as image scales */
 }
 
-/* Hero Image */
+/* CRITICAL: Overlay to hide YouTube controls/title on load */
+.hero-media::before {
+  /* Pseudo-element that covers the video
+     Hides YouTube's interface elements that briefly appear */
+     
+  content: '';
+  /* Required for pseudo-element to display
+     Empty content creates invisible box */
+     
+  position: absolute;
+  /* Positions relative to .hero-media parent
+     Covers entire area */
+     
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* Stretches to fill entire parent
+     Creates full coverage */
+     
+  background: rgba(0, 0, 0, 0.2);
+  /* Slight dark overlay - 20% opacity black
+     Improves text readability over video
+     Hides YouTube controls/title that flash on load */
+     
+  z-index: 2;
+  /* CRITICAL: Must be above video (z-index: 0) but below text (z-index: 10)
+     Sits on top of video, blocks controls */
+     
+  pointer-events: none;
+  /* Allows clicks to pass through overlay
+     Users can still interact with page
+     Overlay is purely visual */
+}
+
+/* Hero Video/Image - Works for both iframe and img */
 .hero-image {
-  /* The actual hero image element */
+  /* Base styles that apply to both video iframe and fallback image */
   
-  width: 100%;
-  /* Initially spans full width of container
-     JavaScript will animate this */
+  display: block;
+  /* Block-level element
+     Prevents extra space below element */
      
-  height: 100%;
-  /* Fills container height */
+  margin: 0;
+  padding: 0;
+  /* Removes spacing */
      
-  object-fit: cover;
-  /* How image fills its box
-     cover: scales to fill box, maintains aspect ratio, crops if needed
-     Ensures no empty space, may crop edges */
+  border: none;
+  /* CRITICAL: Removes iframe's default border
+     Prevents white line around video */
+     
+  pointer-events: none;
+  /* Prevents clicking on video/image
+     Users can't accidentally click and pause video */
      
   transform: scale(1);
   /* Initial scale (no zoom)
@@ -304,19 +351,67 @@
      center center: scales from image center (not corner)
      Keeps image centered while zooming */
      
-  display: block;
-  /* Block-level element (images are inline by default)
-     Prevents extra space below image */
-     
-  margin: 0;
-  padding: 0;
-  /* Removes spacing */
-     
-  transition: transform 0.1s ease-out;
-  /* Smooth transform transitions
+  transition: transform 0.1s ease-out, width 0.1s ease-out, border-radius 0.1s ease-out;
+  /* Smooth transitions for three properties:
+     transform: smooth zoom/scale
+     width: smooth expansion from 80% to 100%
+     border-radius: smooth corner rounding
      0.1s: very fast (responsive to scroll)
-     ease-out: starts fast, slows at end
-     Makes zoom feel smooth not jerky */
+     ease-out: starts fast, slows at end */
+}
+
+/* Specific styles for iframe video */
+iframe.hero-image {
+  /* Targets only iframe elements with hero-image class
+     Different positioning needed for video vs image */
+     
+  position: absolute;
+  /* CRITICAL: Absolute positioning allows precise centering
+     Positions relative to .hero-media parent */
+     
+  top: 50%;
+  left: 50%;
+  /* Positions top-left corner at center of parent
+     Must combine with transform to truly center */
+     
+  transform: translate(-50%, -50%) scale(1);
+  /* CRITICAL: Two transforms combined:
+     translate(-50%, -50%): moves element back by half its size, centering it
+     scale(1): initial scale, JavaScript will animate this
+     Both transforms work together for centered zoom effect */
+     
+  width: 100%;
+  height: 100%;
+  /* Fills container completely */
+     
+  min-width: 100%;
+  min-height: 100%;
+  /* CRITICAL: Ensures video always covers container
+     Prevents black bars on sides
+     Video may be cropped but never shows gaps */
+     
+  object-fit: cover;
+  /* How video fills its box
+     cover: scales to fill box, maintains aspect ratio, crops if needed
+     Ensures no empty space */
+     
+  z-index: 0;
+  /* CRITICAL: Behind overlay (z-index: 2)
+     Overlay hides YouTube controls */
+}
+
+/* Regular image fallback */
+img.hero-image {
+  /* Styles for regular image (not iframe)
+     Simpler positioning since images behave better */
+     
+  width: 100%;
+  height: 100%;
+  /* Fills container */
+     
+  object-fit: cover;
+  /* Same cover behavior as video
+     Maintains consistency */
 }
 
 /* Content Sections */

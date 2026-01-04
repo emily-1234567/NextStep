@@ -24,6 +24,116 @@
     <!-- Font Awesome for Footer -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+    <style>
+      /* Logged-in banner styles */
+      .logged-in-banner {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+        border-bottom: 2px solid #f59e0b;
+        padding: 15px 20px;
+        display: none;
+        align-items: center;
+        justify-content: space-between;
+        z-index: 999;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      }
+
+      .logged-in-banner.show {
+        display: flex;
+      }
+
+      .banner-content {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex: 1;
+      }
+
+      .banner-icon {
+        font-size: 24px;
+      }
+
+      .banner-text {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+
+      .banner-title {
+        font-weight: 700;
+        color: #92400e;
+        font-size: 16px;
+      }
+
+      .banner-subtitle {
+        color: #78350f;
+        font-size: 14px;
+      }
+
+      .banner-actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      .banner-btn {
+        padding: 8px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: none;
+        font-size: 14px;
+      }
+
+      .btn-home {
+        background: white;
+        color: #92400e;
+        border: 2px solid #f59e0b;
+      }
+
+      .btn-home:hover {
+        background: #fef3c7;
+      }
+
+      .btn-logout {
+        background: #ef4444;
+        color: white;
+      }
+
+      .btn-logout:hover {
+        background: #dc2626;
+        transform: translateY(-2px);
+      }
+
+      .login-main.with-banner {
+        padding-top: 170px;
+      }
+
+      @media (max-width: 768px) {
+        .logged-in-banner {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 10px;
+          padding: 12px 15px;
+        }
+
+        .banner-content {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .banner-actions {
+          width: 100%;
+        }
+
+        .banner-btn {
+          flex: 1;
+        }
+      }
+    </style>
   </head>
   <body>
     <nav>
@@ -47,7 +157,26 @@
       </div>      
     </nav>
 
-    <main class="login-main">
+    <!-- Logged-in banner -->
+    <div id="logged-in-banner" class="logged-in-banner">
+      <div class="banner-content">
+        <span class="banner-icon">👤</span>
+        <div class="banner-text">
+          <div class="banner-title">Already Logged In</div>
+          <div class="banner-subtitle">You're logged in as <span id="banner-email"></span></div>
+        </div>
+      </div>
+      <div class="banner-actions">
+        <button class="banner-btn btn-home" onclick="window.location.href='index.html'">
+          Go to Home
+        </button>
+        <button class="banner-btn btn-logout" onclick="handleLogout()">
+          Logout
+        </button>
+      </div>
+    </div>
+
+    <main class="login-main" id="main-content">
       <div class="login-container">
         <!-- Sign Up Card -->
         <div class="login-card signup-card">
@@ -162,6 +291,53 @@
         </div>
       </div>
     </footer>
+
+    <script type="module">
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+      import { getAuth, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBohx_5opFEgh2Xb-EO977v3KzQJ89CAf4",
+        authDomain: "NextStep.firebaseapp.com",
+        projectId: "NextStep",
+        storageBucket: "NextStep.firebasestorage.app",
+        messagingSenderId: "428056422654",
+        appId: "1:428056422654:web:2d6ff0d08002134b3cddaf",
+        measurementId: "G-E0YCVB3KK9"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      window.firebaseAuth = auth;
+
+      // Check if user is logged in and show banner instead of redirecting
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          console.log('User is logged in:', user.email);
+          const banner = document.getElementById('logged-in-banner');
+          const bannerEmail = document.getElementById('banner-email');
+          const mainContent = document.getElementById('main-content');
+          
+          banner.classList.add('show');
+          bannerEmail.textContent = user.email;
+          mainContent.classList.add('with-banner');
+        }
+      });
+
+      // Logout function
+      window.handleLogout = async function() {
+        if (confirm('Are you sure you want to logout?')) {
+          try {
+            await signOut(auth);
+            localStorage.clear();
+            window.location.reload();
+          } catch (error) {
+            console.error('Error logging out:', error);
+            alert('Error logging out. Please try again.');
+          }
+        }
+      };
+    </script>
 
     <!-- Load Firebase scripts -->
     <script type="module" src="signup.js"></script>

@@ -23,14 +23,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 
-
   <!-- scroll animation-->
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 
   <!-- Font Awesome for Footer -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
-
 
   <title>NextStep - Home</title>
 
@@ -54,7 +51,6 @@
 
 <body class="homepage">
   <!--Navigation Menu-->
-
   <nav>
     <div class="navbar">
       <div class="navdiv">
@@ -65,23 +61,20 @@
           </a>
         </div>
 
-        <!-- Navigation links -->
-        <nav class="nav-links">
-          <ul>
-            <li class="navbar-item"><a href="index.html" class="active">Home</a></li>
-            <li class="navbar-item"><a href="map.html">Map</a></li>
-            <li class="navbar-item"><a href="events.html">Events</a></li>
-            <li class="navbar-item"><a href="chatbot.html">Compass</a></li>
-            <li class="navbar-item"><a href="badges.html">Badges</a></li>
-            <li class="navbar-item"><a href="contact.html">Contact Us</a></li>
-          </ul>
-        </nav>
-
-        <!-- Login/Sign Up -->
-        <div class="nav-right">
-          <a href="login.html" class="login">Login</a>
-          <a href="signup.html" class="signup">Sign Up</a>
-        </div>
+        <!-- Navigation links - FIXED STRUCTURE -->
+        <ul>
+          <li class="navbar-item"><a href="index.html" class="active">Home</a></li>
+          <li class="navbar-item"><a href="map.html">Map</a></li>
+          <li class="navbar-item"><a href="events.html">Events</a></li>
+          <li class="navbar-item"><a href="chatbot.html">Compass</a></li>
+          <li class="navbar-item"><a href="badges.html">Badges</a></li>
+          <li class="navbar-item"><a href="contact.html">Contact Us</a></li>
+          <!-- Spacer to push login/signup to the right -->
+          <li class="navbar-spacer"></li>
+          <!-- Login/Signup at the end -->
+          <li class="navbar-item"><a href="login.html" class="login">Login</a></li>
+          <li class="navbar-item"><a href="signup.html" class="signup">Sign Up</a></li>
+        </ul>
       </div>
     </div>
   </nav>
@@ -103,13 +96,7 @@
         </div>
       </header>
       <!-- Hero image -->
-      <section class="image-reveal" id="revealSection">
-        <div class="hero-media">
-          <img
-            src="https://www.thepalmbeaches.com/wp-content/uploads/x041x-Mizner-Park-Downtown-Night-Life-Boca-Raton-Florida.jpg"
-            alt="NextStep Hero Image" class="hero-image" id="heroImage" />
-        </div>
-      </section>
+      <section class="image-reveal" id="revealSection"> <div class="hero-media"> <iframe id="heroImage" class="hero-image" src="https://www.youtube-nocookie.com/embed/9yu2IB9Vo5Y?si=75noNKITv_U2Ft0k&amp;controls=0&amp;start=10&amp;end=243&amp;autoplay=1&amp;mute=1&amp;loop=1&amp;playlist=9yu2IB9Vo5Y&modestbranding=1&showinfo=0&rel=0" title="NextStep Hero Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen> </iframe> </div> </section>
 
 
     </section>
@@ -156,10 +143,6 @@
       </a>
     </section>
   </main>
-  <!--Footer Section-->
-  <script src="script.js" defer></script>
-  <script type="module" src="auth-check.js"></script>
-
 
   <footer>
     <div class="footer-content">
@@ -206,7 +189,7 @@
           <h4>Stay Updated</h4>
           <p style="opacity: 0.5; font-size: 0.95rem; margin-bottom: 1rem;">Subscribe to our newsletter for the latest
             civic events and opportunities.</p>
-          <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+          <form class="newsletter-form" onsubmit="event.preventDefault()">
             <input type="email" class="newsletter-input" placeholder="Your email" required>
             <button type="submit" class="newsletter-button">Join</button>
           </form>
@@ -224,11 +207,12 @@
       </div>
     </div>
   </footer>
-  <!-- Firebase Auth with Profile Dropdown -->
-<script type="module" src="auth-check.js"></script>
-<script src="script.js"></script>
-<script src="dark-mode.js"></script>
 
+  <!-- Firebase Auth MUST load first -->
+  <script type="module" src="auth-check.js"></script>
+  <!-- Then other scripts -->
+  <script src="script.js"></script>
+  <script src="dark-mode.js"></script>
 
 </body>
 

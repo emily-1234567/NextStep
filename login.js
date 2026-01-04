@@ -1,4 +1,4 @@
-// login-simple.js - Login Only Page for NextStep
+// login.js - Login Only Page for NextStep
 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { 
@@ -14,9 +14,9 @@ import {
 // Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyBohx_5opFEgh2Xb-EO977v3KzQJ89CAf4",
-  authDomain: "nextstep-civic.firebaseapp.com",
-  projectId: "nextstep-civic",
-  storageBucket: "nextstep-civic.firebasestorage.app",
+  authDomain: "NextStep.firebaseapp.com",
+  projectId: "NextStep",
+  storageBucket: "NextStep.firebasestorage.app",
   messagingSenderId: "428056422654",
   appId: "1:428056422654:web:2d6ff0d08002134b3cddaf",
   measurementId: "G-E0YCVB3KK9"
@@ -40,9 +40,9 @@ try {
   // Export auth for other modules
   window.firebaseAuth = auth;
   
-  console.log('Firebase initialized successfully');
+  console.log('✅ Firebase initialized successfully');
 } catch (error) {
-  console.error('Firebase initialization error:', error);
+  console.error('❌ Firebase initialization error:', error);
 }
 
 // Show message function
@@ -50,6 +50,8 @@ function showMessage(message, type) {
   console.log('Showing message:', type, message);
   
   const form = document.getElementById('login-form');
+  if (!form) return;
+  
   const card = form.closest('.login-card');
   
   // Remove existing messages
@@ -91,14 +93,17 @@ function getErrorMessage(code) {
   return messages[code] || `Error: ${code}. Please try again.`;
 }
 
+// Flag to prevent double redirects
+let isRedirecting = false;
+
 // Initialize after DOM loads
 window.addEventListener('DOMContentLoaded', function() {
-  console.log('DOM loaded, initializing login page...');
+  console.log('📄 DOM loaded, initializing login page...');
   
   const loginForm = document.getElementById('login-form');
   const googleLoginBtn = document.getElementById('google-login');
 
-  console.log('Elements found:', {
+  console.log('🔍 Elements found:', {
     loginForm: !!loginForm,
     googleLoginBtn: !!googleLoginBtn
   });
@@ -107,13 +112,18 @@ window.addEventListener('DOMContentLoaded', function() {
   if (loginForm) {
     loginForm.addEventListener('submit', async function(e) {
       e.preventDefault();
-      console.log('Login form submitted');
+      console.log('📝 Login form submitted');
+      
+      if (isRedirecting) {
+        console.log('⚠️ Already redirecting, ignoring submit');
+        return;
+      }
       
       const emailInput = document.getElementById('login-email');
       const passwordInput = document.getElementById('login-password');
       
       if (!emailInput || !passwordInput) {
-        console.error('Email or password input not found');
+        console.error('❌ Email or password input not found');
         return;
       }
       
@@ -121,7 +131,7 @@ window.addEventListener('DOMContentLoaded', function() {
       const password = passwordInput.value;
       const submitBtn = loginForm.querySelector('.submit-button');
       
-      console.log('Attempting login for:', email);
+      console.log('🔐 Attempting login for:', email);
       
       if (!email || !password) {
         showMessage('Please enter both email and password', 'error');
@@ -135,19 +145,25 @@ window.addEventListener('DOMContentLoaded', function() {
       }
       
       try {
+        console.log('🔐 Calling signInWithEmailAndPassword...');
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-        console.log('Login successful:', user.email);
+        console.log('✅ ✅ ✅ Login successful!');
+        console.log('👤 User:', user.email);
+        console.log('🆔 User ID:', user.uid);
         
         showMessage(`Welcome back, ${user.displayName || 'User'}!`, 'success');
         
-        // Redirect to home page
+        // Set flag and redirect
+        isRedirecting = true;
+        console.log('🔄 Redirecting to index.html in 1 second...');
         setTimeout(() => {
+          console.log('➡️ Redirecting NOW');
           window.location.href = 'index.html';
-        }, 1500);
+        }, 1000);
         
       } catch (error) {
-        console.error('Login error:', error.code, error.message);
+        console.error('❌ Login error:', error.code, error.message);
         showMessage(getErrorMessage(error.code), 'error');
         
         // Re-enable button
@@ -163,22 +179,33 @@ window.addEventListener('DOMContentLoaded', function() {
   if (googleLoginBtn) {
     googleLoginBtn.addEventListener('click', async function(e) {
       e.preventDefault();
-      console.log('Google login clicked');
+      console.log('🔵 Google login clicked');
+      
+      if (isRedirecting) {
+        console.log('⚠️ Already redirecting, ignoring click');
+        return;
+      }
       
       try {
+        console.log('🔓 Opening Google popup...');
         const result = await signInWithPopup(auth, googleProvider);
         const user = result.user;
-        console.log('Google login successful:', user.email);
+        console.log('✅ ✅ ✅ Google login successful!');
+        console.log('👤 User:', user.email);
+        console.log('🆔 User ID:', user.uid);
         
         showMessage(`Welcome, ${user.displayName || 'User'}!`, 'success');
         
-        // Redirect to home page
+        // Set flag and redirect
+        isRedirecting = true;
+        console.log('🔄 Redirecting to index.html in 1 second...');
         setTimeout(() => {
+          console.log('➡️ Redirecting NOW');
           window.location.href = 'index.html';
-        }, 1500);
+        }, 1000);
         
       } catch (error) {
-        console.error('Google login error:', error.code, error.message);
+        console.error('❌ Google login error:', error.code, error.message);
         if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
           showMessage(getErrorMessage(error.code), 'error');
         }
@@ -186,22 +213,32 @@ window.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Check if user is already logged in
+  // Check if user is already logged in - BUT DON'T REDIRECT FROM LOGIN PAGE
   onAuthStateChanged(auth, (user) => {
-    if (user) {
-      console.log('User already logged in:', user.email);
-      // Redirect to home if already logged in
-      const currentPath = window.location.pathname;
-      if (currentPath.endsWith('login.html') || currentPath.endsWith('/login')) {
-        console.log('Redirecting to home...');
-        setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 500);
+    if (user && !isRedirecting) {
+      console.log('👤 User already logged in:', user.email);
+      console.log('ℹ️ On login page - showing message but not redirecting automatically');
+      
+      // Show a friendly message instead of auto-redirecting
+      const loginCard = document.querySelector('.login-card');
+      if (loginCard) {
+        const existingBanner = document.getElementById('already-logged-in-banner');
+        if (!existingBanner) {
+          const banner = document.createElement('div');
+          banner.id = 'already-logged-in-banner';
+          banner.style.cssText = 'background: linear-gradient(135deg, #d1fae5, #a7f3d0); padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; color: #065f46; font-weight: 600;';
+          banner.innerHTML = `
+            ✅ You're already logged in as ${user.email}
+            <br>
+            <a href="index.html" style="color: #2563eb; text-decoration: underline; margin-top: 10px; display: inline-block;">Go to Home Page →</a>
+          `;
+          loginCard.insertBefore(banner, loginCard.firstChild);
+        }
       }
-    } else {
-      console.log('No user logged in');
+    } else if (!user) {
+      console.log('👤 No user logged in');
     }
   });
 
-  console.log('Login page initialization complete');
+  console.log('✅ Login page initialization complete');
 });

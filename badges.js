@@ -1,14 +1,45 @@
+// User progress data - tracks actual user activity
+let userProgress = {
+    eventsAttended: 0,
+    volunteeredHours: 0,
+    townHallSpeeches: 0,
+    environmentalEvents: 0,
+    youthEvents: 0,
+    innovationSummits: 0,
+    earlyRegistrations: 0,
+    consecutiveMonths: 0,
+    friendsInvited: 0,
+    isFoundingMember: false,
+    eventsCreated: 0,
+    electionsVoted: 0,
+    serviceProjects: 0,
+    networkConnections: 0,
+    sustainabilityInitiatives: 0
+};
+
+// Load user progress from storage or initialize
+function loadUserProgress() {
+    const saved = localStorage.getItem('userProgress');
+    if (saved) {
+        userProgress = JSON.parse(saved);
+    }
+}
+
+// Save user progress to storage
+function saveUserProgress() {
+    localStorage.setItem('userProgress', JSON.stringify(userProgress));
+}
+
 // Badge definitions - Array of all available badges in the system
 const badges = [
     {
-        id: 1, // Unique identifier for this badge
-        name: "First Step", // Display name of the badge
-        description: "Attended your first civic event", // What user needs to do to earn it
-        icon: '<img src="https://cdn-icons-png.flaticon.com/128/599/599224.png" alt="First Step">', // Badge icon HTML
-        category: "milestone", // Category type for filtering
-        earned: true, // Whether user has earned this badge
-        progress: 1, // Current progress toward earning
-        required: 1 // Required amount to earn the badge
+        id: 1,
+        name: "First Step",
+        description: "Attended your first civic event",
+        icon: '<img src="https://cdn-icons-png.flaticon.com/128/599/599224.png" alt="First Step">',
+        category: "milestone",
+        progressKey: "eventsAttended",
+        required: 1
     },
     {
         id: 2,
@@ -16,8 +47,7 @@ const badges = [
         description: "Attended 5 civic events",
         icon: '<img src="https://cdn-icons-png.flaticon.com/128/956/956100.png" alt="Active Citizen">',
         category: "participation",
-        earned: true,
-        progress: 5,
+        progressKey: "eventsAttended",
         required: 5
     },
     {
@@ -26,8 +56,7 @@ const badges = [
         description: "Attended 10 civic events",
         icon: '<img src="https://cdn-icons-png.flaticon.com/128/2827/2827957.png" alt="Community Champion">',
         category: "participation",
-        earned: true,
-        progress: 10,
+        progressKey: "eventsAttended",
         required: 10
     },
     {
@@ -36,8 +65,7 @@ const badges = [
         description: "Attended 25 civic events",
         icon: '<img src="https://cdn-icons-png.flaticon.com/128/4766/4766834.png" alt="Civic Hero">',
         category: "participation",
-        earned: false,
-        progress: 12,
+        progressKey: "eventsAttended",
         required: 25
     },
     {
@@ -46,8 +74,7 @@ const badges = [
         description: "Volunteered at your first event",
         icon: '<img src="https://cdn-icons-png.flaticon.com/128/10729/10729191.png" alt="Volunteer">',
         category: "participation",
-        earned: true,
-        progress: 1,
+        progressKey: "volunteeredHours",
         required: 1
     },
     {
@@ -56,8 +83,7 @@ const badges = [
         description: "Volunteered 10 hours",
         icon: '<img src="https://cdn-icons-png.flaticon.com/128/10845/10845170.png" alt="Helping Hand">',
         category: "impact",
-        earned: true,
-        progress: 10,
+        progressKey: "volunteeredHours",
         required: 10
     },
     {
@@ -66,8 +92,7 @@ const badges = [
         description: "Volunteered 50 hours",
         icon: '<img src="https://cdn-icons-png.flaticon.com/128/14118/14118953.png" alt="Time Champion">',
         category: "impact",
-        earned: false,
-        progress: 24,
+        progressKey: "volunteeredHours",
         required: 50
     },
     {
@@ -76,8 +101,7 @@ const badges = [
         description: "Spoke at a town hall meeting",
         icon: '<img src="https://cdn-icons-png.flaticon.com/128/2168/2168463.png" alt="Voice of Change">',
         category: "leadership",
-        earned: true,
-        progress: 1,
+        progressKey: "townHallSpeeches",
         required: 1
     },
     {
@@ -86,8 +110,7 @@ const badges = [
         description: "Participated in 3 environmental events",
         icon: '<img src="https://cdn-icons-png.flaticon.com/128/8635/8635653.png" alt="Earth Guardian">',
         category: "impact",
-        earned: true,
-        progress: 3,
+        progressKey: "environmentalEvents",
         required: 3
     },
     {
@@ -96,8 +119,7 @@ const badges = [
         description: "Attended 5 youth-focused events",
         icon: '<img src="https://cdn-icons-png.flaticon.com/128/1344/1344761.png" alt="Youth Leader">',
         category: "leadership",
-        earned: false,
-        progress: 2,
+        progressKey: "youthEvents",
         required: 5
     },
     {
@@ -106,8 +128,7 @@ const badges = [
         description: "Attended 3 innovation summits",
         icon: '<img src="https://cdn-icons-png.flaticon.com/128/11995/11995575.png" alt="Tech Innovator">',
         category: "participation",
-        earned: false,
-        progress: 1,
+        progressKey: "innovationSummits",
         required: 3
     },
     {
@@ -116,8 +137,7 @@ const badges = [
         description: "Registered for an event 1 month in advance",
         icon: '<img src="https://cdn-icons-png.flaticon.com/128/1230/1230870.png" alt="Early Bird">',
         category: "milestone",
-        earned: true,
-        progress: 1,
+        progressKey: "earlyRegistrations",
         required: 1
     },
     {
@@ -126,8 +146,7 @@ const badges = [
         description: "Attended events for 3 consecutive months",
         icon: '<img src="https://cdn-icons-png.flaticon.com/128/14261/14261136.png" alt="Streak Master">',
         category: "milestone",
-        earned: false,
-        progress: 2,
+        progressKey: "consecutiveMonths",
         required: 3
     },
     {
@@ -136,8 +155,7 @@ const badges = [
         description: "Invited 5 friends to events",
         icon: '<img src="https://cdn-icons-png.flaticon.com/128/338/338337.png" alt="Social Butterfly">',
         category: "leadership",
-        earned: false,
-        progress: 3,
+        progressKey: "friendsInvited",
         required: 5
     },
     {
@@ -146,8 +164,7 @@ const badges = [
         description: "One of the first 100 users",
         icon: '<img src="https://cdn-icons-png.flaticon.com/128/616/616490.png" alt="Founding Member">',
         category: "milestone",
-        earned: false,
-        progress: 0,
+        progressKey: "isFoundingMember",
         required: 1
     },
     {
@@ -156,8 +173,7 @@ const badges = [
         description: "Created or organized a local event",
         icon: '<img src="https://cdn-icons-png.flaticon.com/128/3079/3079652.png" alt="Community Builder">',
         category: "leadership",
-        earned: false,
-        progress: 0,
+        progressKey: "eventsCreated",
         required: 1
     },
     {
@@ -166,8 +182,7 @@ const badges = [
         description: "Voted in 3 local elections",
         icon: '<img src="https://cdn-icons-png.flaticon.com/128/3553/3553691.png" alt="Democracy Champion">',
         category: "participation",
-        earned: true,
-        progress: 3,
+        progressKey: "electionsVoted",
         required: 3
     },
     {
@@ -176,8 +191,7 @@ const badges = [
         description: "Completed 5 community service projects",
         icon: '<img src="https://cdn-icons-png.flaticon.com/128/2917/2917995.png" alt="Neighborhood Hero">',
         category: "impact",
-        earned: false,
-        progress: 3,
+        progressKey: "serviceProjects",
         required: 5
     },
     {
@@ -186,8 +200,7 @@ const badges = [
         description: "Networked with 25 community members",
         icon: '<img src="https://cdn-icons-png.flaticon.com/128/681/681494.png" alt="Super Connector">',
         category: "leadership",
-        earned: false,
-        progress: 18,
+        progressKey: "networkConnections",
         required: 25
     },
     {
@@ -196,11 +209,24 @@ const badges = [
         description: "Participated in 10 environmental initiatives",
         icon: '<img src="https://cdn-icons-png.flaticon.com/128/2990/2990970.png" alt="Sustainability Star">',
         category: "impact",
-        earned: false,
-        progress: 6,
+        progressKey: "sustainabilityInitiatives",
         required: 10
     }
 ];
+
+// Check if a badge is earned based on user progress
+function isBadgeEarned(badge) {
+    const progress = getBadgeProgress(badge);
+    return progress >= badge.required;
+}
+
+// Get current progress for a badge
+function getBadgeProgress(badge) {
+    if (badge.progressKey === 'isFoundingMember') {
+        return userProgress.isFoundingMember ? 1 : 0;
+    }
+    return userProgress[badge.progressKey] || 0;
+}
 
 // Store current filter selection (default is 'all')
 let currentFilter = 'all';
@@ -223,10 +249,10 @@ function renderBadges(filter = 'all') {
     // Apply filters based on filter parameter
     if (filter === 'earned') {
         // Show only earned badges
-        filteredBadges = badges.filter(b => b.earned);
+        filteredBadges = badges.filter(b => isBadgeEarned(b));
     } else if (filter === 'locked') {
         // Show only locked (not earned) badges
-        filteredBadges = badges.filter(b => !b.earned);
+        filteredBadges = badges.filter(b => !isBadgeEarned(b));
     } else if (filter !== 'all') {
         // Show badges from specific category
         filteredBadges = badges.filter(b => b.category === filter);
@@ -234,21 +260,23 @@ function renderBadges(filter = 'all') {
 
     // Create and append badge cards for each filtered badge
     filteredBadges.forEach((badge, index) => {
+        const progress = getBadgeProgress(badge);
+        const earned = isBadgeEarned(badge);
         // Calculate progress percentage (max 100%)
-        const progressPercent = Math.min((badge.progress / badge.required) * 100, 100);
+        const progressPercent = Math.min((progress / badge.required) * 100, 100);
         
         // Create badge card div element
         const badgeCard = document.createElement('div');
-        badgeCard.className = `badge-card ${badge.earned ? 'earned' : 'locked'}`; // Add earned/locked class
+        badgeCard.className = `badge-card ${earned ? 'earned' : 'locked'}`; // Add earned/locked class
         badgeCard.setAttribute('data-category', badge.category); // Store category for filtering
-        badgeCard.setAttribute('data-status', badge.earned ? 'earned' : 'locked'); // Store status
+        badgeCard.setAttribute('data-status', earned ? 'earned' : 'locked'); // Store status
         
         // Add staggered animation delay for cascading effect
         badgeCard.style.animationDelay = `${index * 0.05}s`;
         
         // Build the badge card HTML content
         badgeCard.innerHTML = `
-            ${badge.earned 
+            ${earned 
                 ? '<div class="earned-badge">✓ Earned</div>' // Show earned badge
                 : '<div class="locked-badge">🔒 Locked</div>' // Show locked badge
             }
@@ -260,13 +288,13 @@ function renderBadges(filter = 'all') {
             </div>
             <div class="badge-name">${badge.name}</div>
             <div class="badge-description">${badge.description}</div>
-            ${!badge.earned ? `
+            ${!earned ? `
                 <div class="badge-progress">
                     <div class="progress-bar-container">
                         <div class="progress-bar" style="width: ${progressPercent}%"></div>
                     </div>
                     <div class="progress-text">
-                        ${badge.progress} / ${badge.required}
+                        ${progress} / ${badge.required}
                     </div>
                 </div>
             ` : ''} 
@@ -285,7 +313,7 @@ function renderBadges(filter = 'all') {
  */
 function updateStats() {
     // Calculate earned badges count
-    const earnedCount = badges.filter(b => b.earned).length;
+    const earnedCount = badges.filter(b => isBadgeEarned(b)).length;
     // Get total badges count
     const totalCount = badges.length;
     // Calculate completion percentage
@@ -300,6 +328,98 @@ function updateStats() {
     if (earnedEl) earnedEl.textContent = earnedCount;
     if (totalEl) totalEl.textContent = totalCount;
     if (percentEl) percentEl.textContent = completionPercent + '%';
+}
+
+/**
+ * Update user progress and check for newly earned badges
+ * @param {string} progressKey - The key in userProgress to update
+ * @param {number} amount - Amount to add to progress
+ */
+function updateProgress(progressKey, amount = 1) {
+    console.log(`updateProgress called: ${progressKey} +${amount}`);
+    console.log('Current userProgress before update:', {...userProgress});
+    
+    const oldProgress = {...userProgress};
+    
+    if (progressKey === 'isFoundingMember') {
+        userProgress[progressKey] = true;
+    } else {
+        userProgress[progressKey] = (userProgress[progressKey] || 0) + amount;
+    }
+    
+    console.log('Current userProgress after update:', {...userProgress});
+    
+    saveUserProgress();
+    console.log('Progress saved to localStorage');
+    
+    // Check for newly earned badges
+    const newlyEarned = [];
+    badges.forEach(badge => {
+        if (badge.progressKey === progressKey) {
+            const wasEarned = (progressKey === 'isFoundingMember' ? oldProgress[progressKey] : (oldProgress[progressKey] || 0) >= badge.required);
+            const isNowEarned = isBadgeEarned(badge);
+            
+            console.log(`Badge "${badge.name}": wasEarned=${wasEarned}, isNowEarned=${isNowEarned}`);
+            
+            if (!wasEarned && isNowEarned) {
+                newlyEarned.push(badge);
+            }
+        }
+    });
+    
+    console.log('Newly earned badges:', newlyEarned.map(b => b.name));
+    
+    // Show notifications for newly earned badges
+    newlyEarned.forEach(badge => {
+        showBadgeNotification(badge);
+    });
+    
+    // Re-render badges if on badges page
+    if (document.getElementById('badges-grid')) {
+        console.log('Re-rendering badges page');
+        renderBadges(currentFilter);
+    }
+}
+
+/**
+ * Show notification when a badge is earned
+ * @param {object} badge - The badge that was earned
+ */
+function showBadgeNotification(badge) {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        padding: 1.5rem 2rem;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(16, 185, 129, 0.4);
+        z-index: 10000;
+        font-weight: 600;
+        animation: slideIn 0.5s ease;
+        max-width: 300px;
+    `;
+    
+    notification.innerHTML = `
+        <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">🎉 Badge Earned!</div>
+        <div style="font-size: 1rem;">${badge.name}</div>
+        <div style="font-size: 0.85rem; opacity: 0.9; margin-top: 0.3rem;">${badge.description}</div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Remove notification after 5 seconds
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.5s ease';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                document.body.removeChild(notification);
+            }
+        }, 500);
+    }, 5000);
 }
 
 /**
@@ -353,11 +473,18 @@ function handleNewsletter(event) {
 /**
  * Initialize the badges page
  */
-function init() {
+function initBadgesPage() {
+    // Only run on badges page
+    if (!document.getElementById('badges-grid')) return;
+    
+    // Load saved user progress
+    loadUserProgress();
+    
     // Log initialization info to console
     console.log('Badges page loaded');
     console.log(`Total badges: ${badges.length}`);
-    console.log(`Earned badges: ${badges.filter(b => b.earned).length}`);
+    console.log(`Earned badges: ${badges.filter(b => isBadgeEarned(b)).length}`);
+    console.log('User progress:', userProgress);
     
     // Render all badges on page load
     renderBadges();
@@ -379,13 +506,52 @@ function init() {
     });
 }
 
-// Initialize when DOM is ready
+// Add CSS animations for notifications (only once)
+(function addBadgeStyles() {
+    if (document.getElementById('badge-animations')) return;
+    
+    const style = document.createElement('style');
+    style.id = 'badge-animations';
+    style.textContent = `
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+})();
+
+// Load user progress immediately when script loads (for all pages)
+loadUserProgress();
+console.log('badges.js loaded - userProgress initialized:', userProgress);
+
+// Make functions available globally IMMEDIATELY
+window.updateProgress = updateProgress;
+window.loadUserProgress = loadUserProgress;
+console.log('Badge functions exposed to window object');
+
+// Initialize when DOM is ready (only if on badges page)
 if (document.readyState === 'loading') {
-    // DOM still loading, wait for it
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', initBadgesPage);
 } else {
-    // DOM ready, initialize now
-    init();
+    initBadgesPage();
 }
 
 // Export functions for external use if in module environment
@@ -394,6 +560,8 @@ if (typeof module !== 'undefined' && module.exports) {
         badges,
         renderBadges,
         filterBadges,
-        updateStats
+        updateStats,
+        updateProgress,
+        loadUserProgress
     };
 }

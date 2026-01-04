@@ -109,7 +109,7 @@
 }
 
 .filter-innovation:hover {
-    border-left-color: #8b5cf6;
+    border-left-color: #ca3d2a;
 }
 
 .filter-environmental:hover {
@@ -117,7 +117,7 @@
 }
 
 .filter-education:hover {
-    border-left-color: #2563eb;
+    border-left-color: #b325eb;
 }
 
 /* Zoom control styling */
