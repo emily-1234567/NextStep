@@ -2,15 +2,15 @@
 console.log("JS loaded");
 
 // Get references to key HTML elements
-const heroTitle = document.getElementById('heroTitle'); // Main hero title element
-const heroTagline = document.getElementById('heroTagline'); // Hero tagline/subtitle element
-const heroSection = document.getElementById('hero'); // Hero section container
-const imageReveal = document.getElementById('revealSection'); // Image reveal section
-const heroImage = document.getElementById('heroImage'); // The hero image/video itself
-const firstPoint = document.querySelector('.point .point-content'); // First content point section
+const heroTitle = document.getElementById('heroTitle');
+const heroTagline = document.getElementById('heroTagline');
+const heroSection = document.getElementById('hero');
+const imageReveal = document.getElementById('revealSection');
+const heroImage = document.getElementById('heroImage');
+const firstPoint = document.querySelector('.point .point-content');
+const heroMedia = document.querySelector('.hero-media'); // Get the container
 
 // CRITICAL: Check if heroImage is an iframe (video) or img (image)
-// This determines which transform method to use (video needs centering transform)
 const isVideo = heroImage && heroImage.tagName === 'IFRAME';
 
 // Flag to prevent multiple animation frames from running simultaneously
@@ -21,42 +21,34 @@ const originalTitleHTML = heroTitle.innerHTML;
 
 // Main parallax scroll animation function
 function smoothParallax() {
-  // Get current scroll position from top of page
   const scrollY = window.scrollY;
 
   // Safety check - only run if all required elements exist on the page
-  if (!heroTitle || !heroTagline || !heroImage || !imageReveal) {
-    return; // Exit function if any element is missing
+  if (!heroTitle || !heroTagline || !heroImage || !imageReveal || !heroMedia) {
+    return;
   }
 
   // Get position information for the image reveal section
-  const imageRect = imageReveal.getBoundingClientRect(); // Get element's position relative to viewport
-  const imageBottom = imageRect.bottom + scrollY; // Calculate absolute position of bottom edge
+  const imageRect = imageReveal.getBoundingClientRect();
+  const imageBottom = imageRect.bottom + scrollY;
  
   
   // 1. MOVE TITLE + TAGLINE TOGETHER (FAST through image)
-  const maxTranslation = imageBottom - 35.5; // Maximum distance to move (stops before image ends)
-  const translation = Math.min(scrollY * 2.2, maxTranslation); // Calculate movement (2.2x scroll speed, capped)
-  heroTitle.style.transform = `translateY(${translation}px)`; // Apply vertical movement to title
-  heroTagline.style.transform = `translateY(${translation}px)`; // Apply same movement to tagline
+  const maxTranslation = imageBottom - 35.5;
+  const translation = Math.min(scrollY * 2.2, maxTranslation);
+  heroTitle.style.transform = `translateY(${translation}px)`;
+  heroTagline.style.transform = `translateY(${translation}px)`;
   
   // Get updated positions AFTER transform has been applied
-  const titleRect = heroTitle.getBoundingClientRect(); // Get title's new position
-  const taglineRect = heroTagline.getBoundingClientRect(); // Get tagline's new position
-  const titleBottom = titleRect.bottom + scrollY; // Calculate title's absolute bottom position
-
+  const titleRect = heroTitle.getBoundingClientRect();
+  const taglineRect = heroTagline.getBoundingClientRect();
+  const titleBottom = titleRect.bottom + scrollY;
 
   // FONT SCALE (shrinks while scrolling)
-  const minScale = 0.556;  // Smallest font size (55.6% of original)
-  const maxScale = 1;    // Original font size (100%)
-
-  // Clamp scroll value so shrinking stops at image bottom
+  const minScale = 0.556;
+  const maxScale = 1;
   const fontScroll = Math.min(scrollY, maxTranslation);
-
-  // Calculate how far through the shrinking animation we are (0 to 1)
-  const scaleProgress = Math.min(fontScroll / 500, 1); // Over 500px of scroll
-
-  // Interpolate between max and min scale based on progress
+  const scaleProgress = Math.min(fontScroll / 500, 1);
   const fontScale = maxScale - (maxScale - minScale) * scaleProgress;
 
   // Apply both scale and translation transforms together
@@ -64,83 +56,71 @@ function smoothParallax() {
   heroTagline.style.transform = `translateY(${translation}px) scale(${fontScale})`;
 
   // 2. DISAPPEAR AT END OF IMAGE
-  // Hide tagline when title reaches the bottom of the image
   if (titleBottom >= imageBottom) {
-    heroTagline.style.opacity = 0; // Fade out tagline
-    heroTitle.textContent = "Your Next Step"; // Change title text (removes accent span)
+    heroTagline.style.opacity = 0;
+    heroTitle.textContent = "Your Next Step";
   } else {
-    heroTagline.style.opacity = 1; // Keep tagline visible
-    heroTitle.innerHTML = originalTitleHTML; // Restore original HTML with accent span
+    heroTagline.style.opacity = 1;
+    heroTitle.innerHTML = originalTitleHTML;
   }
 
   // 3. CHECK IF TEXT IS OVER IMAGE
-  // Detect if title overlaps with image section
   const titleOverImage = titleRect.bottom > imageRect.top && titleRect.top < imageRect.bottom;
-  // Detect if tagline overlaps with image section
   const taglineOverImage = taglineRect.bottom > imageRect.top && taglineRect.top < imageRect.bottom;
 
   // 4. TITLE COLOR CHANGE
   if (titleOverImage) {
-    // Title is over the image - make it white for contrast
     heroTitle.style.color = "white";
-    const accent = heroTitle.querySelector(".accent"); // Find accent span element
-    if (accent) accent.style.color = "white"; // Make accent white too
-    heroTitle.style.textShadow = "0 4px 20px rgba(0,0,0,0.8)"; // Add shadow for readability
+    const accent = heroTitle.querySelector(".accent");
+    if (accent) accent.style.color = "white";
+    heroTitle.style.textShadow = "0 4px 20px rgba(0,0,0,0.8)";
   } else {
-    // Title is not over image - use default dark blue color
     heroTitle.style.color = "rgb(1, 9, 67)";
-    const accent = heroTitle.querySelector(".accent"); // Find accent span
-    if (accent) accent.style.color = "#1e40ff"; // Make accent blue
-    heroTitle.style.textShadow = "none"; // Remove shadow
+    const accent = heroTitle.querySelector(".accent");
+    if (accent) accent.style.color = "#1e40ff";
+    heroTitle.style.textShadow = "none";
   }
-
 
   // 5. TAGLINE COLOR CHANGE
   if (taglineOverImage) {
-    // Tagline is over the image - make it white
     heroTagline.style.color = "white";
-    heroTagline.style.textShadow = "0 2px 15px rgba(0,0,0,0.6)"; // Add shadow
+    heroTagline.style.textShadow = "0 2px 15px rgba(0,0,0,0.6)";
   } else {
-    // Tagline is not over image - use default color
     heroTagline.style.color = "rgb(1, 9, 67)";
-    heroTagline.style.textShadow = "none"; // Remove shadow
+    heroTagline.style.textShadow = "none";
   }
 
-
-
-  // 6. IMAGE/VIDEO ZOOM + WIDTH EXPANSION + BORDER RADIUS
-  const imageScrollMultiplier = 1.0; // Scroll speed multiplier for image effects
-  const effectiveScroll = scrollY * imageScrollMultiplier; // Calculate effective scroll amount
+  // 6. CONTAINER ZOOM + BORDER RADIUS (NEW APPROACH)
+  const imageScrollMultiplier = 1.0;
+  const effectiveScroll = scrollY * imageScrollMultiplier;
   
-  // Scale (zoom in) - image/video gets larger as you scroll
-  // CRITICAL: For video, start at 1.3 to crop out YouTube's black bars
-  const baseScale = isVideo ? 1.3 : 1; // Videos start zoomed in 30% to hide letterboxing
-  const scale = baseScale + Math.min(effectiveScroll / 2000, 0.2); // Zoom up to 20% more over 2000px
+  // Width expansion: starts at 70%, expands to 100%
+  const startWidth = 80;
+  const endWidth = 100;
+  const widthProgress = Math.min(effectiveScroll / 800, 1);
+  const currentWidth = startWidth + (endWidth - startWidth) * widthProgress;
   
-  // Width expansion: starts at 80%, expands to 100%
-  const startWidth = 80; // Starting width percentage
-  const endWidth = 100;   // Ending width percentage (full width)
-  const widthProgress = Math.min(effectiveScroll / 800, 1); // Progress over 800px of scroll
-  const currentWidth = startWidth + (endWidth - startWidth) * widthProgress; // Calculate current width
+  // Border radius: starts at 40px, goes to 0px (square corners)
+  const startRadius = 40;
+  const endRadius = 0;
+  const currentRadius = startRadius - (startRadius - endRadius) * widthProgress;
   
-  // Border radius: starts at 20px, goes to 0px (square corners)
-  const startRadius = 20; // Starting border radius
-  const endRadius = 0; // Ending border radius (square)
-  const currentRadius = startRadius - (startRadius - endRadius) * widthProgress; // Calculate current radius
+  // Apply width and border radius to CONTAINER instead of image
+  heroMedia.style.width = `${currentWidth}%`;
+  heroMedia.style.borderRadius = `${currentRadius}px`;
   
-  // CRITICAL: Apply transformations differently for video vs image
+  // Keep video/image at fixed scale inside container
   if (isVideo) {
-    // For iframe video: MUST include centering transform + scale
-    // translate(-50%, -50%) keeps video centered as it scales
-    heroImage.style.transform = `translate(-50%, -50%) scale(${scale})`;
-    heroImage.style.width = `${currentWidth}%`; // Apply width expansion
-    heroImage.style.height = `${currentWidth}%`; // Keep aspect ratio by matching width
-    heroImage.style.borderRadius = `${currentRadius}px`; // Apply border radius
+    // For video: keep centered and at 1.3x to hide black bars
+    heroImage.style.transform = `translate(-50%, -50%) scale(1.3)`;
+    heroImage.style.width = `100%`;
+    heroImage.style.height = `100%`;
+    heroImage.style.borderRadius = `${currentRadius}px`;
   } else {
-    // For regular image: just scale (no centering needed)
-    heroImage.style.transform = `scale(${scale})`; // Apply zoom
-    heroImage.style.width = `${currentWidth}%`; // Apply width
-    heroImage.style.borderRadius = `${currentRadius}px`; // Apply border radius
+    // For regular image: no zoom, just fill container
+    heroImage.style.transform = `scale(1)`;
+    heroImage.style.width = `100%`;
+    heroImage.style.borderRadius = `${currentRadius}px`;
   }
 
   // Reset ticking flag to allow next animation frame
@@ -151,76 +131,62 @@ function smoothParallax() {
 window.addEventListener(
   "scroll",
   () => {
-    // Only schedule animation if one isn't already scheduled
     if (!ticking) {
-      requestAnimationFrame(smoothParallax); // Schedule animation for next frame
-      ticking = true; // Set flag to prevent multiple schedules
+      requestAnimationFrame(smoothParallax);
+      ticking = true;
     }
   },
-  { passive: true } // CRITICAL: Passive listener doesn't block scroll performance
+  { passive: true }
 );
 
 // Window resize event listener - recalculates on window size change
 window.addEventListener("resize", () => {
-  requestAnimationFrame(smoothParallax); // Recalculate positions on resize
-}, { passive: true }); // Passive for better performance
+  requestAnimationFrame(smoothParallax);
+}, { passive: true });
 
 // Initial call - run parallax function on page load
 if (document.readyState === 'loading') {
-  // If DOM is still loading, wait for it
   document.addEventListener('DOMContentLoaded', smoothParallax);
 } else {
-  // DOM is ready, run immediately
   smoothParallax();
 }
 
-
 // Mobile menu toggle functionality
 document.addEventListener('DOMContentLoaded', function() {
-    // Get navigation menu element
     const nav = document.querySelector('nav ul');
-    
-    // Create hamburger button element
     const hamburger = document.createElement('button');
-    hamburger.className = 'mobile-menu-toggle'; // Add CSS class
-    hamburger.innerHTML = '<span></span><span></span><span></span>'; // Three lines for hamburger icon
-    hamburger.setAttribute('aria-label', 'Toggle menu'); // Accessibility label
+    hamburger.className = 'mobile-menu-toggle';
+    hamburger.innerHTML = '<span></span><span></span><span></span>';
+    hamburger.setAttribute('aria-label', 'Toggle menu');
     
-    // Get navigation container
     const navdiv = document.querySelector('.navdiv');
     
-    // Only proceed if both elements exist
     if (navdiv && nav) {
-        // Insert hamburger button before the navigation menu
         navdiv.insertBefore(hamburger, nav);
         
-        // Toggle menu on hamburger click
         hamburger.addEventListener('click', function(e) {
-            e.stopPropagation(); // Prevent click from bubbling to document
-            nav.classList.toggle('mobile-open'); // Toggle menu visibility
-            this.classList.toggle('active'); // Toggle hamburger animation
-            document.body.classList.toggle('menu-open'); // Toggle body class (prevents scroll)
+            e.stopPropagation();
+            nav.classList.toggle('mobile-open');
+            this.classList.toggle('active');
+            document.body.classList.toggle('menu-open');
         });
         
-        // Close menu when clicking outside
         document.addEventListener('click', function(e) {
-            // Check if menu is open and click is outside menu/hamburger
             if (nav.classList.contains('mobile-open') && 
                 !nav.contains(e.target) && 
                 !hamburger.contains(e.target)) {
-                nav.classList.remove('mobile-open'); // Close menu
-                hamburger.classList.remove('active'); // Reset hamburger
-                document.body.classList.remove('menu-open'); // Re-enable scroll
+                nav.classList.remove('mobile-open');
+                hamburger.classList.remove('active');
+                document.body.classList.remove('menu-open');
             }
         });
         
-        // Close menu when clicking a nav link
-        const navLinks = nav.querySelectorAll('a'); // Get all navigation links
+        const navLinks = nav.querySelectorAll('a');
         navLinks.forEach(link => {
             link.addEventListener('click', function() {
-                nav.classList.remove('mobile-open'); // Close menu
-                hamburger.classList.remove('active'); // Reset hamburger
-                document.body.classList.remove('menu-open'); // Re-enable scroll
+                nav.classList.remove('mobile-open');
+                hamburger.classList.remove('active');
+                document.body.classList.remove('menu-open');
             });
         });
     }

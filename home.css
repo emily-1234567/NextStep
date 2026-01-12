@@ -249,8 +249,8 @@
   /* Block-level element
      Takes full width available
      Default for sections but explicit for clarity */
-     
-  background: #000;
+
+  background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
   /* CRITICAL: Black background prevents YouTube's black bars from showing
      Fills space while video loads */
 }
@@ -258,12 +258,11 @@
 /* Hero Media Wrapper */
 .hero-media {
   /* Wrapper for hero image/video */
-  
-  width: 100%;
   height: 100%;
+  width: 155vh;
+  max-width: 100%;
   /* Fills entire parent (.image-reveal) */
-     
-  margin: 0;
+  margin: 0 auto;
   padding: 0;
   /* Removes spacing */
      
@@ -374,12 +373,6 @@ iframe.hero-image {
   /* Positions top-left corner at center of parent
      Must combine with transform to truly center */
      
-  transform: translate(-50%, -50%) scale(1);
-  /* CRITICAL: Two transforms combined:
-     translate(-50%, -50%): moves element back by half its size, centering it
-     scale(1): initial scale, JavaScript will animate this
-     Both transforms work together for centered zoom effect */
-     
   width: 100%;
   height: 100%;
   /* Fills container completely */
@@ -390,7 +383,7 @@ iframe.hero-image {
      Prevents black bars on sides
      Video may be cropped but never shows gaps */
      
-  object-fit: cover;
+  object-fit: contain;
   /* How video fills its box
      cover: scales to fill box, maintains aspect ratio, crops if needed
      Ensures no empty space */
@@ -398,6 +391,7 @@ iframe.hero-image {
   z-index: 0;
   /* CRITICAL: Behind overlay (z-index: 2)
      Overlay hides YouTube controls */
+
 }
 
 /* Regular image fallback */

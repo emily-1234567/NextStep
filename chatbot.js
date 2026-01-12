@@ -94,7 +94,7 @@ function showTypingIndicator() {
     const contentDiv = document.createElement('div');
     contentDiv.className = 'message-content';
     contentDiv.innerHTML = `
-        <strong>NextStep Assistant</strong>
+        <strong>Compass</strong>
         <div class="typing-indicator">
             <div class="typing-dot"></div>
             <div class="typing-dot"></div>
