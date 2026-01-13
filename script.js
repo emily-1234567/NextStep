@@ -8,7 +8,7 @@ const heroSection = document.getElementById('hero');
 const imageReveal = document.getElementById('revealSection');
 const heroImage = document.getElementById('heroImage');
 const firstPoint = document.querySelector('.point .point-content');
-const heroMedia = document.querySelector('.hero-media'); // Get the container
+const heroMedia = document.querySelector('.hero-media');
 
 // CRITICAL: Check if heroImage is an iframe (video) or img (image)
 const isVideo = heroImage && heroImage.tagName === 'IFRAME';
@@ -90,7 +90,7 @@ function smoothParallax() {
     heroTagline.style.textShadow = "none";
   }
 
-  // 6. CONTAINER ZOOM + BORDER RADIUS (NEW APPROACH)
+  // 6. CONTAINER ZOOM + BORDER RADIUS
   const imageScrollMultiplier = 1.0;
   const effectiveScroll = scrollY * imageScrollMultiplier;
   
@@ -201,11 +201,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let slides = Array.from(track.children);
   const slideCount = slides.length;
-  let index = 1; // start on first real slide
+  let index = 1;
   let autoplayInterval;
   const AUTOPLAY_DELAY = 4000;
 
-  /* ---- Clone slides ---- */
+  /* Clone slides */
   const firstClone = slides[0].cloneNode(true);
   const lastClone = slides[slides.length - 1].cloneNode(true);
 
@@ -214,7 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   slides = Array.from(track.children);
 
-  /* ---- Create dots (real slides only) ---- */
+  /* Create dots */
   for (let i = 0; i < slideCount; i++) {
     const dot = document.createElement("button");
     if (i === 0) dot.classList.add("active");
@@ -233,7 +233,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return slides[0].getBoundingClientRect().width;
   }
 
-  /* ---- Scroll helper ---- */
   function scrollToIndex(jump = false) {
     if (jump) track.classList.add("jump");
 
@@ -247,7 +246,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  /* ---- Update dots ---- */
   function updateDots() {
     let realIndex = index - 1;
     if (realIndex < 0) realIndex = slideCount - 1;
@@ -257,7 +255,6 @@ document.addEventListener("DOMContentLoaded", () => {
     dots[realIndex].classList.add("active");
   }
 
-  /* ---- Autoplay ---- */
   function startAutoplay() {
     autoplayInterval = setInterval(() => {
       index++;
@@ -274,7 +271,6 @@ document.addEventListener("DOMContentLoaded", () => {
     startAutoplay();
   }
 
-  /* ---- Buttons ---- */
   prevBtn.addEventListener("click", () => {
     index--;
     scrollToIndex();
@@ -287,7 +283,6 @@ document.addEventListener("DOMContentLoaded", () => {
     resetAutoplay();
   });
 
-  /* ---- Scroll handling ---- */
   track.addEventListener("scroll", () => {
     window.requestAnimationFrame(() => {
       const newIndex = Math.round(track.scrollLeft / slideWidth());
@@ -297,7 +292,6 @@ document.addEventListener("DOMContentLoaded", () => {
         updateDots();
       }
 
-      /* ---- Loop jump ---- */
       if (index === 0) {
         index = slideCount;
         scrollToIndex(true);
@@ -310,12 +304,146 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  /* ---- Pause on hover ---- */
   track.addEventListener("mouseenter", stopAutoplay);
   track.addEventListener("mouseleave", startAutoplay);
 
-  /* ---- Init ---- */
   scrollToIndex(true);
   updateDots();
   startAutoplay();
 });
+
+// ============================================
+// TYPEWRITER ANIMATION FOR "ENGAGE IN" LIST
+// ============================================
+
+// Category text mapping
+const categoryText = {
+  political: "Political",
+  environmental: "Environmental",
+  innovative: "Innovative",
+  youth: "Youth",
+  educational: "Educational"
+};
+
+let typewriterAnimationTriggered = false;
+let isAnimating = false; // Prevent animation conflicts
+
+// Typewriter function
+function typeWriter(element, text, speed = 50) {
+  return new Promise((resolve) => {
+    let i = 0;
+    const cursor = element;
+    
+    function type() {
+      if (i < text.length) {
+        cursor.textContent += text.charAt(i);
+        i++;
+        setTimeout(type, speed);
+      } else {
+        // Remove blinking cursor after typing is done
+        cursor.classList.add('done');
+        resolve();
+      }
+    }
+    
+    type();
+  });
+}
+
+// Main animation sequence - forward
+async function animateEngageList() {
+  if (isAnimating) return;
+  isAnimating = true;
+  
+  const paragraphSide = document.querySelector('.paragraph-side');
+  const engageSide = document.querySelector('.engage-side');
+  const engageLabel = document.querySelector('.engage-label');
+  const engageItems = document.querySelectorAll('.engage-item');
+  
+  // Slide in engage side from left
+  setTimeout(() => {
+    engageSide.classList.add('slide-in');
+  }, 200);
+  
+  // Show "Engage in:" label
+  engageLabel.classList.add('show');
+  
+  // Wait a bit before starting typewriter
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  // Type each category one by one
+  for (let item of engageItems) {
+    const category = item.getAttribute('data-category');
+    const text = categoryText[category];
+    const typewriterSpan = item.querySelector('.typewriter-text');
+    
+    // Make item visible
+    item.classList.add('typing');
+    
+    // Type the text (50ms per character = fast but visible)
+    await typeWriter(typewriterSpan, text, 50);
+    
+    // Small pause between words
+    await new Promise(resolve => setTimeout(resolve, 150));
+  }
+  
+  // Slide in paragraph from right after list is complete
+  setTimeout(() => {
+    paragraphSide.classList.add('slide-in');
+  }, 300);
+  
+  isAnimating = false;
+}
+
+// Reverse animation - when scrolling back up
+function reverseEngageAnimation() {
+  if (isAnimating) return;
+  
+  const paragraphSide = document.querySelector('.paragraph-side');
+  const engageSide = document.querySelector('.engage-side');
+  const engageLabel = document.querySelector('.engage-label');
+  const engageItems = document.querySelectorAll('.engage-item');
+  
+  // Remove slide-in classes
+  paragraphSide.classList.remove('slide-in');
+  engageSide.classList.remove('slide-in');
+  engageLabel.classList.remove('show');
+  
+  // Reset all engage items
+  engageItems.forEach(item => {
+    item.classList.remove('typing');
+    const typewriterSpan = item.querySelector('.typewriter-text');
+    typewriterSpan.textContent = '';
+    typewriterSpan.classList.remove('done');
+  });
+  
+  // Reset the trigger flag so animation can play again
+  typewriterAnimationTriggered = false;
+}
+
+// Intersection Observer to trigger animation when scrolled into view
+function setupTypewriterObserver() {
+  const firstPointSection = document.querySelector('.first-point');
+  
+  if (!firstPointSection) return;
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !typewriterAnimationTriggered) {
+        // Scrolling down - trigger animation
+        typewriterAnimationTriggered = true;
+        animateEngageList();
+      } else if (!entry.isIntersecting && typewriterAnimationTriggered) {
+        // Scrolled away (up or down) - reverse animation
+        reverseEngageAnimation();
+      }
+    });
+  }, {
+    threshold: 0.3 // Trigger when 30% of section is visible
+  });
+  
+  observer.observe(firstPointSection);
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', setupTypewriterObserver);

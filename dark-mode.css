@@ -964,3 +964,10 @@ textarea:focus-visible {
     border: 1px solid var(--border-color);
     text-align: center;
 }
+
+[data-theme="dark"] .carousel-dots button {
+  border: 2px solid white;
+}
+[data-theme="dark"] .carousel-dots button.active {
+  background: white;
+}

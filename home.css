@@ -407,6 +407,7 @@ img.hero-image {
   /* Same cover behavior as video
      Maintains consistency */
 }
+
 /* Community Gallery Carousel */
 /* Carousel wrapper */
 .carousel {
@@ -543,6 +544,304 @@ img.hero-image {
      Necessary for JavaScript animations */
 }
 
+/* NEW: Split layout for first point section with typewriter animation */
+.point-content-split {
+  /* Container for the "Your Next Step" section with split layout */
+  
+  max-width: 1200px;
+  /* Wider than standard point-content to accommodate two columns
+     Provides enough space for paragraph and list side-by-side */
+     
+  margin: 0 auto;
+  /* Centers container horizontally */
+     
+  padding: 0 40px;
+  /* Horizontal padding to prevent content from touching edges
+     40px gives breathing room on both sides */
+}
+
+.point-content-split h2 {
+  /* Heading for the split layout section */
+  
+  font-size: 48px;
+  /* Large heading size matching other sections */
+     
+  margin-bottom: 40px;
+  /* Space below heading before split content starts
+     40px creates visual separation */
+     
+  color: rgb(1, 9, 67);
+  /* Dark blue matching site theme */
+     
+  font-weight: 700;
+  /* Bold text for emphasis */
+     
+  text-align: center;
+  /* Centered heading above the two columns */
+}
+
+.split-container {
+  /* Flexbox container that holds paragraph and engage list */
+  
+  display: flex;
+  /* Flexbox layout for side-by-side columns */
+     
+  gap: 60px;
+  /* Space between left (paragraph) and right (list) columns
+     60px creates clear visual separation */
+     
+  align-items: flex-start;
+  /* Aligns items to top of container
+     Prevents stretching to match heights */
+     
+  justify-content: center;
+  /* Centers the two columns within the container */
+}
+
+/* Right side: Paragraph that slides in from right */
+.paragraph-side {
+  /* Container for the descriptive paragraph */
+  
+  flex: 1;
+  /* Takes up equal space with engage-side (50/50 split)
+     flex: 1 means grow to fill available space */
+     
+  max-width: 600px;
+  /* Limits paragraph width for optimal reading
+     Prevents lines from becoming too long
+     Wider than engage-side (600px vs 400px) for longer text */
+     
+  opacity: 0;
+  /* Initially invisible
+     Will fade in during animation */
+     
+  transform: translateX(50px);
+  /* Initially positioned 50px to the right
+     Will slide left to original position during animation */
+     
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  /* Smooth transitions for fade and slide
+     0.8s duration creates leisurely animation
+     ease: smooth acceleration/deceleration curve */
+}
+
+.paragraph-side.slide-in {
+  /* Class added by JavaScript to trigger animation */
+  
+  opacity: 1;
+  /* Fully visible */
+     
+  transform: translateX(0);
+  /* Returns to original position (no offset)
+     Creates slide-in effect from right */
+}
+
+.paragraph-side p {
+  /* Paragraph text styling */
+  
+  font-size: 18px;
+  /* Standard readable size for body text */
+     
+  line-height: 1.6;
+  /* Space between lines
+     1.6 = 160% of font size for comfortable reading */
+     
+  color: rgb(1, 9, 67);
+  /* Dark blue matching site theme */
+     
+  opacity: 0.8;
+  /* Slightly transparent (80% opaque)
+     Makes body text less prominent than headings */
+     
+  text-align: left;
+  /* Left-aligned text (more natural for reading paragraphs) */
+}
+
+/* Left side: Engage in list with typewriter animation */
+.engage-side {
+  /* Container for the "Engage in:" list */
+  
+  flex: 1;
+  /* Takes up equal space with paragraph-side (50/50 split) */
+     
+  max-width: 400px;
+  /* Limits list width
+     Slightly narrower than paragraph for visual balance */
+     
+  text-align: left;
+  /* Left-aligns the list items */
+     
+  opacity: 0;
+  /* Initially invisible
+     Will fade in during animation */
+     
+  transform: translateX(-50px);
+  /* Initially positioned 50px to the left
+     Will slide right to original position during animation */
+     
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  /* Smooth transitions for fade and slide
+     0.8s duration creates leisurely animation
+     ease: smooth acceleration/deceleration curve */
+}
+
+.engage-side.slide-in {
+  /* Class added by JavaScript to trigger animation */
+  
+  opacity: 1;
+  /* Fully visible */
+     
+  transform: translateX(0);
+  /* Returns to original position (no offset)
+     Creates slide-in effect from left */
+}
+
+.engage-label {
+  /* "Engage in:" label above the list */
+  
+  font-size: 24px;
+  /* Larger than body text, smaller than heading
+     Acts as sub-heading for the list */
+     
+  font-weight: 700;
+  /* Bold for emphasis */
+     
+  color: rgb(1, 9, 67);
+  /* Dark blue matching site theme */
+     
+  margin-bottom: 20px;
+  /* Space below label, above list items */
+     
+  opacity: 0;
+  /* Initially invisible
+     Will fade in before typewriter animation starts */
+     
+  transition: opacity 0.5s ease;
+  /* Smooth fade-in transition
+     0.5s duration */
+}
+
+.engage-label.show {
+  /* Class added by JavaScript to reveal label */
+  
+  opacity: 1;
+  /* Fully visible */
+}
+
+.engage-list {
+  /* Unordered list container */
+  
+  list-style: none;
+  /* Removes default bullet points
+     We want clean text without bullets */
+     
+  padding: 0;
+  /* Removes default list padding */
+     
+  margin: 0;
+  /* Removes default list margin */
+}
+
+.engage-item {
+  /* Individual list items (Political, Environmental, etc.) */
+  
+  font-size: 28px;
+  /* Large, prominent text
+     Makes each category stand out */
+     
+  font-weight: 700;
+  /* Bold for emphasis and visual impact */
+     
+  margin-bottom: 15px;
+  /* Space between each list item
+     Creates vertical rhythm */
+     
+  opacity: 0;
+  /* Initially invisible
+     Each item fades in as it's being typed */
+     
+  transition: opacity 0.3s ease;
+  /* Quick fade-in when typing starts
+     0.3s creates snappy appearance */
+}
+
+.engage-item.typing {
+  /* Class added when item is being typed */
+  
+  opacity: 1;
+  /* Becomes visible as typewriter starts */
+}
+
+/* Category colors - each category gets unique vibrant color */
+.engage-item[data-category="political"] .typewriter-text {
+  /* Political category */
+  color: #2563eb; /* Blue - represents trust, stability, civic duty */
+}
+
+.engage-item[data-category="environmental"] .typewriter-text {
+  /* Environmental category */
+  color: #10b981; /* Green - represents nature, sustainability, growth */
+}
+
+.engage-item[data-category="innovative"] .typewriter-text {
+  /* Innovative category */
+  color: #ec4899; /* Pink - represents creativity, innovation, forward-thinking */
+}
+
+.engage-item[data-category="youth"] .typewriter-text {
+  /* Youth category */
+  color: #f59e0b; /* Yellow/Orange - represents energy, optimism, sunshine */
+}
+
+.engage-item[data-category="educational"] .typewriter-text {
+  /* Educational category */
+  color: #8b5cf6; /* Purple - represents wisdom, knowledge, learning */
+}
+
+/* Typewriter cursor effect */
+.typewriter-text::after {
+  /* Pseudo-element creates blinking cursor */
+  
+  content: '|';
+  /* Vertical bar character acts as cursor
+     Simple, recognizable cursor symbol */
+     
+  animation: blink 0.7s infinite;
+  /* Blinks continuously
+     0.7s cycle creates natural typing rhythm
+     infinite: never stops blinking */
+     
+  margin-left: 2px;
+  /* Small space between text and cursor
+     Prevents cursor from touching last letter */
+}
+
+.typewriter-text.done::after {
+  /* Removes cursor after typing is complete */
+  
+  content: '';
+  /* Empty content removes the cursor
+     Text appears "finished" */
+     
+  animation: none;
+  /* Stops blinking animation */
+}
+
+/* Blinking animation for cursor */
+@keyframes blink {
+  /* Creates blinking effect by toggling opacity */
+  
+  0%, 50% { 
+    opacity: 1; 
+    /* Cursor visible for first half of cycle */
+  }
+  51%, 100% { 
+    opacity: 0; 
+    /* Cursor invisible for second half of cycle
+       Creates blinking effect */
+  }
+}
+
 .point h2 {
   /* Section headings */
   
@@ -563,10 +862,9 @@ img.hero-image {
 .first-point h2 {
   /* Specific style for first section heading */
   
-  opacity: 0;
-  /* Initially invisible
-     JavaScript will fade it in
-     Creates animated entrance effect */
+  opacity: 1;
+  /* Keep visible (removed fade-in from original)
+     First section heading is immediately visible */
 }
 
 .point p {
@@ -804,6 +1102,60 @@ main {
     font-size: 18px;
     /* Slightly smaller tagline (was 20px)
        Maintains proportion with reduced title size */
+  }
+
+  /* Stack split layout on mobile - makes two columns vertical */
+  .split-container {
+    /* Changes from horizontal flex to vertical stack */
+    
+    flex-direction: column;
+    /* Stacks items vertically instead of side-by-side
+       Better for narrow mobile screens */
+       
+    gap: 40px;
+    /* Reduced gap (was 60px)
+       Conserves vertical space on mobile */
+  }
+
+  .paragraph-side,
+  .engage-side {
+    /* Both columns now stack, so remove width limits */
+    
+    max-width: 100%;
+    /* Full width on mobile (was 500px/400px)
+       Uses all available screen width */
+  }
+
+  .paragraph-side p {
+    /* Center paragraph text on mobile */
+    
+    text-align: center;
+    /* Centered text (was left-aligned)
+       Looks better when stacked vertically */
+  }
+
+  .engage-side {
+    /* Center the engage list on mobile */
+    
+    text-align: center;
+    /* Centers "Engage in:" and list items
+       Better visual balance on mobile */
+  }
+
+  .engage-label {
+    /* Smaller "Engage in:" label on mobile */
+    
+    font-size: 20px;
+    /* Reduced from 24px
+       Proportional to smaller screen */
+  }
+
+  .engage-item {
+    /* Smaller category items on mobile */
+    
+    font-size: 24px;
+    /* Reduced from 28px
+       Still prominent but fits mobile better */
   }
 
   .point,
