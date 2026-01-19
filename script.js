@@ -363,13 +363,15 @@ async function animateEngageList() {
   // Slide in engage side from left
   setTimeout(() => {
     engageSide.classList.add('slide-in');
-  }, 200);
+  }, 100);
+  // CHANGED: Reduced from 200ms to 100ms - faster slide-in
   
   // Show "Engage in:" label
   engageLabel.classList.add('show');
   
   // Wait a bit before starting typewriter
-  await new Promise(resolve => setTimeout(resolve, 500));
+  await new Promise(resolve => setTimeout(resolve, 250));
+  // CHANGED: Reduced from 500ms to 250ms - less wait before typing starts
   
   // Type each category one by one
   for (let item of engageItems) {
@@ -380,17 +382,20 @@ async function animateEngageList() {
     // Make item visible
     item.classList.add('typing');
     
-    // Type the text (50ms per character = fast but visible)
-    await typeWriter(typewriterSpan, text, 50);
+    // Type the text (30ms per character = faster typing)
+    await typeWriter(typewriterSpan, text, 30);
+    // CHANGED: Reduced from 50ms to 30ms - faster typing speed
     
     // Small pause between words
-    await new Promise(resolve => setTimeout(resolve, 150));
+    await new Promise(resolve => setTimeout(resolve, 80));
+    // CHANGED: Reduced from 150ms to 80ms - less pause between words
   }
   
   // Slide in paragraph from right after list is complete
   setTimeout(() => {
     paragraphSide.classList.add('slide-in');
-  }, 300);
+  }, 150);
+  // CHANGED: Reduced from 300ms to 150ms - paragraph appears faster
   
   isAnimating = false;
 }

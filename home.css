@@ -548,27 +548,28 @@ img.hero-image {
 .point-content-split {
   /* Container for the "Your Next Step" section with split layout */
   
-  max-width: 1200px;
-  /* Wider than standard point-content to accommodate two columns
-     Provides enough space for paragraph and list side-by-side */
+  max-width: 1400px;
+  /* CHANGED: Even wider (was 1200px)
+     Gives more breathing room for both columns */
      
   margin: 0 auto;
   /* Centers container horizontally */
      
-  padding: 0 40px;
-  /* Horizontal padding to prevent content from touching edges
-     40px gives breathing room on both sides */
+  padding: 0 60px;
+  /* CHANGED: More horizontal padding (was 40px)
+     Better spacing from screen edges */
 }
 
 .point-content-split h2 {
   /* Heading for the split layout section */
   
-  font-size: 48px;
-  /* Large heading size matching other sections */
+  font-size: 56px;
+  /* CHANGED: Larger heading (was 48px)
+     More commanding presence */
      
-  margin-bottom: 40px;
-  /* Space below heading before split content starts
-     40px creates visual separation */
+  margin-bottom: 80px;
+  /* CHANGED: Even more space below heading (was 60px)
+     Creates dramatic separation before content */
      
   color: rgb(1, 9, 67);
   /* Dark blue matching site theme */
@@ -578,6 +579,10 @@ img.hero-image {
      
   text-align: center;
   /* Centered heading above the two columns */
+     
+  letter-spacing: -1px;
+  /* NEW: Tighten spacing for large heading
+     Makes it look more refined */
 }
 
 .split-container {
@@ -586,13 +591,13 @@ img.hero-image {
   display: flex;
   /* Flexbox layout for side-by-side columns */
      
-  gap: 60px;
-  /* Space between left (paragraph) and right (list) columns
-     60px creates clear visual separation */
+  gap: 100px;
+  /* CHANGED: Even more space between columns (was 80px)
+     Creates very clear visual separation */
      
-  align-items: flex-start;
-  /* Aligns items to top of container
-     Prevents stretching to match heights */
+  align-items: center;
+  /* CHANGED: Center vertically (was flex-start)
+     Better visual balance between columns */
      
   justify-content: center;
   /* Centers the two columns within the container */
@@ -602,15 +607,17 @@ img.hero-image {
 .paragraph-side {
   /* Container for the descriptive paragraph */
   
-  flex: 1;
+  flex: 2;
   /* Takes up equal space with engage-side (50/50 split)
      flex: 1 means grow to fill available space */
      
-  max-width: 600px;
-  /* Limits paragraph width for optimal reading
-     Prevents lines from becoming too long
-     Wider than engage-side (600px vs 400px) for longer text */
+  max-width: none !important;
+  /* CHANGED: Slightly wider (was 500px)
+     Better balance with larger text */
      
+      width: 100% !important;
+  /* Forces paragraph to take full available width */
+
   opacity: 0;
   /* Initially invisible
      Will fade in during animation */
@@ -639,34 +646,44 @@ img.hero-image {
 .paragraph-side p {
   /* Paragraph text styling */
   
-  font-size: 18px;
-  /* Standard readable size for body text */
+  font-size: 20px !important;
+  /* Smaller font fits more words per line */
      
-  line-height: 1.6;
-  /* Space between lines
-     1.6 = 160% of font size for comfortable reading */
+  line-height: 1.7 !important;
+  /* Tighter line spacing */
      
-  color: rgb(1, 9, 67);
+  color: rgb(1, 9, 67) !important;
   /* Dark blue matching site theme */
      
-  opacity: 0.8;
-  /* Slightly transparent (80% opaque)
-     Makes body text less prominent than headings */
+  opacity: 0.9 !important;
+  /* Makes text stand out more */
      
-  text-align: left;
-  /* Left-aligned text (more natural for reading paragraphs) */
+  text-align: left !important;
+  /* Left-aligned text */
+     
+  font-weight: 400 !important;
+  /* Normal weight */
+     
+  max-width: none !important;
+  /* CRITICAL: Removes width limit */
+     
+  width: 100% !important;
+  /* Forces paragraph to use full container width */
 }
-
 /* Left side: Engage in list with typewriter animation */
 .engage-side {
   /* Container for the "Engage in:" list */
   
-  flex: 1;
+   flex: 1;
   /* Takes up equal space with paragraph-side (50/50 split) */
      
-  max-width: 400px;
-  /* Limits list width
-     Slightly narrower than paragraph for visual balance */
+  max-width: 500px ! important;
+  /* CHANGED: Wider to match paragraph (was 500px)
+     Creates symmetrical layout */
+
+     margin-left: -50px;
+  /* NEW: Shifts the entire list 50px to the left
+     Adjust this value: -50px, -80px, -100px, etc. */
      
   text-align: left;
   /* Left-aligns the list items */
@@ -699,9 +716,9 @@ img.hero-image {
 .engage-label {
   /* "Engage in:" label above the list */
   
-  font-size: 24px;
-  /* Larger than body text, smaller than heading
-     Acts as sub-heading for the list */
+  font-size: 36px;
+  /* CHANGED: Even larger (was 32px)
+     More commanding presence */
      
   font-weight: 700;
   /* Bold for emphasis */
@@ -709,8 +726,9 @@ img.hero-image {
   color: rgb(1, 9, 67);
   /* Dark blue matching site theme */
      
-  margin-bottom: 20px;
-  /* Space below label, above list items */
+  margin-bottom: 35px;
+  /* CHANGED: More space below label (was 30px)
+     Creates better separation from list */
      
   opacity: 0;
   /* Initially invisible
@@ -719,6 +737,10 @@ img.hero-image {
   transition: opacity 0.5s ease;
   /* Smooth fade-in transition
      0.5s duration */
+     
+  letter-spacing: -0.5px;
+  /* NEW: Tighten spacing for large text
+     Makes it look more refined */
 }
 
 .engage-label.show {
@@ -745,16 +767,16 @@ img.hero-image {
 .engage-item {
   /* Individual list items (Political, Environmental, etc.) */
   
-  font-size: 28px;
-  /* Large, prominent text
-     Makes each category stand out */
+  font-size: 48px;
+  /* CHANGED: Even larger (was 42px)
+     Maximum impact for each category */
      
   font-weight: 700;
   /* Bold for emphasis and visual impact */
      
-  margin-bottom: 15px;
-  /* Space between each list item
-     Creates vertical rhythm */
+  margin-bottom: 25px;
+  /* CHANGED: More spacing between items (was 20px)
+     Gives each category more breathing room */
      
   opacity: 0;
   /* Initially invisible
@@ -763,6 +785,346 @@ img.hero-image {
   transition: opacity 0.3s ease;
   /* Quick fade-in when typing starts
      0.3s creates snappy appearance */
+     
+  letter-spacing: -1px;
+  /* CHANGED: More tightening (was -0.5px)
+     Makes large text look more refined */
+     
+  line-height: 1.2;
+  /* NEW: Controls spacing if text wraps
+     Keeps wrapped lines tight and cohesive */
+}
+
+.engage-item.typing {
+  /* Class added when item is being typed */
+  
+  opacity: 1;
+  /* Becomes visible as typewriter starts */
+}
+
+/* Category colors - each category gets unique vibrant color */
+.engage-item[data-category="political"] .typewriter-text {
+  /* Political category */
+  color: #2563eb; /* Blue - represents trust, stability, civic duty */
+}
+
+.engage-item[data-category="environmental"] .typewriter-text {
+  /* Environmental category */
+  color: #10b981; /* Green - represents nature, sustainability, growth */
+}
+
+.engage-item[data-category="innovative"] .typewriter-text {
+  /* Innovative category */
+  color: #ec4899; /* Pink - represents creativity, innovation, forward-thinking */
+}
+
+.engage-item[data-category="youth"] .typewriter-text {
+  /* Youth category */
+  color: #f59e0b; /* Yellow/Orange - represents energy, optimism, sunshine */
+}
+
+.engage-item[data-category="educational"] .typewriter-text {
+  /* Educational category */
+  color: #8b5cf6; /* Purple - represents wisdom, knowledge, learning */
+}
+
+/* Typewriter cursor effect */
+.typewriter-text::after {
+  /* Pseudo-element creates blinking cursor */
+  
+  content: '|';
+  /* Vertical bar character acts as cursor
+     Simple, recognizable cursor symbol */
+     
+  animation: blink 0.7s infinite;
+  /* Blinks continuously
+     0.7s cycle creates natural typing rhythm
+     infinite: never stops blinking */
+     
+  margin-left: 3px;
+  /* CHANGED: Slightly more space (was 2px)
+     Prevents cursor from touching larger letters */
+}
+
+.typewriter-text.done::after {
+  /* Removes cursor after typing is complete */
+  
+  content: '';
+  /* Empty content removes the cursor
+     Text appears "finished" */
+     
+  animation: none;
+  /* Stops blinking animation */
+}
+
+/* Blinking animation for cursor */
+@keyframes blink {
+  /* Creates blinking effect by toggling opacity */
+  
+  0%, 50% { 
+    opacity: 1; 
+    /* Cursor visible for first half of cycle */
+  }
+  51%, 100% { 
+    opacity: 0; 
+    /* Cursor invisible for second half of cycle
+       Creates blinking effect */
+  }
+}
+
+/* Mobile Responsive - Update for larger text */
+@media (max-width: 768px) {
+  /* Media query: applies styles when screen is 768px wide or less
+     Tablets and mobile devices
+     768px is common breakpoint (iPad width)
+     All rules inside only apply on small screens */
+     
+  .point-content-split {
+    padding: 0 20px;
+    /* CHANGED: Less padding on mobile (was 60px)
+       Uses screen space more efficiently */
+  }
+  
+  .point-content-split h2 {
+    font-size: 40px;
+    /* CHANGED: Proportional to mobile (was 48px)
+       Maintains impact without overwhelming */
+       
+    margin-bottom: 50px;
+    /* CHANGED: Less space on mobile (was 80px)
+       Conserves vertical space */
+  }
+
+  /* Stack split layout on mobile - makes two columns vertical */
+  .split-container {
+    /* Changes from horizontal flex to vertical stack */
+    
+    flex-direction: column;
+    /* Stacks items vertically instead of side-by-side
+       Better for narrow mobile screens */
+       
+    gap: 60px;
+    /* CHANGED: More gap on mobile (was 50px)
+       Maintains visual separation when stacked */
+  }
+
+  .paragraph-side,
+  .engage-side {
+    /* Both columns now stack, so remove width limits */
+    
+    max-width: 100%;
+    /* Full width on mobile
+       Uses all available screen width */
+  }
+
+  .paragraph-side p {
+    /* Center paragraph text on mobile */
+    
+    text-align: center;
+    /* Centered text (was left-aligned)
+       Looks better when stacked vertically */
+       
+    font-size: 19px;
+    /* CHANGED: Proportionally adjusted (was 17px)
+       Maintains readability on smaller screens */
+       
+    line-height: 1.8;
+    /* CHANGED: Slightly tighter on mobile (was 1.9)
+       Conserves vertical space */
+  }
+
+  .engage-side {
+    /* Center the engage list on mobile */
+    
+    text-align: center;
+    /* Centers "Engage in:" and list items
+       Better visual balance on mobile */
+  }
+
+  .engage-label {
+    /* Smaller "Engage in:" label on mobile */
+    
+    font-size: 28px;
+    /* CHANGED: Proportionally adjusted (was 26px)
+       Maintains prominence on smaller screens */
+       
+    margin-bottom: 28px;
+    /* CHANGED: Adjusted spacing
+       Maintains visual rhythm */
+  }
+
+  .engage-item {
+    /* Smaller category items on mobile */
+    
+    font-size: 36px;
+    /* CHANGED: Proportionally larger (was 34px)
+       Still prominent and impactful on mobile */
+       
+    margin-bottom: 18px;
+    /* CHANGED: Adjusted spacing
+       Maintains visual rhythm */
+       
+    letter-spacing: -0.5px;
+    /* CHANGED: Less tight on mobile (was -1px)
+       Better readability on small screens */
+  }
+}
+
+.engage-item.typing {
+  /* Class added when item is being typed */
+  
+  opacity: 1;
+  /* Becomes visible as typewriter starts */
+}
+
+/* Category colors - each category gets unique vibrant color */
+.engage-item[data-category="political"] .typewriter-text {
+  /* Political category */
+  color: #2563eb; /* Blue - represents trust, stability, civic duty */
+}
+
+.engage-item[data-category="environmental"] .typewriter-text {
+  /* Environmental category */
+  color: #10b981; /* Green - represents nature, sustainability, growth */
+}
+
+.engage-item[data-category="innovative"] .typewriter-text {
+  /* Innovative category */
+  color: #ec4899; /* Pink - represents creativity, innovation, forward-thinking */
+}
+
+.engage-item[data-category="youth"] .typewriter-text {
+  /* Youth category */
+  color: #f59e0b; /* Yellow/Orange - represents energy, optimism, sunshine */
+}
+
+.engage-item[data-category="educational"] .typewriter-text {
+  /* Educational category */
+  color: #8b5cf6; /* Purple - represents wisdom, knowledge, learning */
+}
+
+/* Typewriter cursor effect */
+.typewriter-text::after {
+  /* Pseudo-element creates blinking cursor */
+  
+  content: '|';
+  /* Vertical bar character acts as cursor
+     Simple, recognizable cursor symbol */
+     
+  animation: blink 0.7s infinite;
+  /* Blinks continuously
+     0.7s cycle creates natural typing rhythm
+     infinite: never stops blinking */
+     
+  margin-left: 3px;
+  /* CHANGED: Slightly more space (was 2px)
+     Prevents cursor from touching larger letters */
+}
+
+.typewriter-text.done::after {
+  /* Removes cursor after typing is complete */
+  
+  content: '';
+  /* Empty content removes the cursor
+     Text appears "finished" */
+     
+  animation: none;
+  /* Stops blinking animation */
+}
+
+/* Blinking animation for cursor */
+@keyframes blink {
+  /* Creates blinking effect by toggling opacity */
+  
+  0%, 50% { 
+    opacity: 1; 
+    /* Cursor visible for first half of cycle */
+  }
+  51%, 100% { 
+    opacity: 0; 
+    /* Cursor invisible for second half of cycle
+       Creates blinking effect */
+  }
+}
+
+/* Mobile Responsive - Update for larger text */
+@media (max-width: 768px) {
+  /* Media query: applies styles when screen is 768px wide or less
+     Tablets and mobile devices
+     768px is common breakpoint (iPad width)
+     All rules inside only apply on small screens */
+
+  /* Stack split layout on mobile - makes two columns vertical */
+  .split-container {
+    /* Changes from horizontal flex to vertical stack */
+    
+    flex-direction: column;
+    /* Stacks items vertically instead of side-by-side
+       Better for narrow mobile screens */
+       
+    gap: 50px;
+    /* CHANGED: More gap on mobile (was 40px)
+       Maintains visual separation when stacked */
+  }
+
+  .paragraph-side,
+  .engage-side {
+    /* Both columns now stack, so remove width limits */
+    
+    max-width: 100%;
+    /* Full width on mobile (was 500px/400px)
+       Uses all available screen width */
+  }
+
+  .paragraph-side p {
+    /* Center paragraph text on mobile */
+    
+    text-align: center;
+    /* Centered text (was left-aligned)
+       Looks better when stacked vertically */
+       
+    font-size: 17px;
+    /* CHANGED: Slightly smaller on mobile (was 18px)
+       Better fit for small screens */
+  }
+
+  .engage-side {
+    /* Center the engage list on mobile */
+    
+    text-align: center;
+    /* Centers "Engage in:" and list items
+       Better visual balance on mobile */
+  }
+
+  .engage-label {
+    /* Smaller "Engage in:" label on mobile */
+    
+    font-size: 26px;
+    /* CHANGED: Proportionally adjusted (was 20px)
+       Maintains prominence on smaller screens */
+       
+    margin-bottom: 25px;
+    /* CHANGED: Adjusted spacing (was not specified)
+       Maintains visual rhythm */
+  }
+
+  .engage-item {
+    /* Smaller category items on mobile */
+    
+    font-size: 34px;
+    /* CHANGED: Proportionally larger (was 24px)
+       Still prominent and impactful on mobile */
+       
+    margin-bottom: 16px;
+    /* CHANGED: Adjusted spacing (was not specified)
+       Maintains visual rhythm */
+  }
+
+  .point-content-split h2 {
+    margin-bottom: 40px;
+    /* CHANGED: Less space on mobile (was 60px)
+       Conserves vertical space */
+  }
 }
 
 .engage-item.typing {

@@ -3,6 +3,88 @@ const chatMessages = document.getElementById('chat-messages');
 const userInput = document.getElementById('user-input');
 const sendButton = document.getElementById('send-button');
 
+// Chat history storage
+let chatHistory = [];
+let isLoggedIn = false;
+let userId = null;
+
+// Check if user is logged in
+function checkLoginStatus() {
+    isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    userId = localStorage.getItem('userId');
+    
+    if (isLoggedIn && userId) {
+        loadChatHistory();
+    }
+}
+
+// Save chat history to storage
+async function saveChatHistory() {
+    if (!isLoggedIn || !userId) return;
+    
+    try {
+        const chatData = JSON.stringify(chatHistory);
+        await window.storage.set(`chat-history:${userId}`, chatData, false);
+        console.log('Chat history saved successfully');
+    } catch (error) {
+        console.error('Error saving chat history:', error);
+    }
+}
+
+// Load chat history from storage
+async function loadChatHistory() {
+    if (!isLoggedIn || !userId) return;
+    
+    try {
+        const result = await window.storage.get(`chat-history:${userId}`, false);
+        
+        if (result && result.value) {
+            chatHistory = JSON.parse(result.value);
+            
+            // Clear existing messages (except welcome message)
+            const welcomeMessage = chatMessages.querySelector('.bot-message');
+            chatMessages.innerHTML = '';
+            if (welcomeMessage) {
+                chatMessages.appendChild(welcomeMessage);
+            }
+            
+            // Render chat history
+            chatHistory.forEach(message => {
+                addMessage(message.content, message.isUser, false);
+            });
+            
+            console.log('Chat history loaded successfully');
+        }
+    } catch (error) {
+        console.error('Error loading chat history:', error);
+        // If key doesn't exist, that's fine - start fresh
+    }
+}
+
+// Clear chat history
+async function clearChatHistory() {
+    if (!isLoggedIn || !userId) return;
+    
+    if (confirm('Are you sure you want to clear your chat history? This cannot be undone.')) {
+        try {
+            await window.storage.delete(`chat-history:${userId}`, false);
+            chatHistory = [];
+            
+            // Clear messages except welcome
+            const welcomeMessage = document.querySelector('.bot-message:first-child');
+            chatMessages.innerHTML = '';
+            if (welcomeMessage) {
+                chatMessages.appendChild(welcomeMessage.cloneNode(true));
+            }
+            
+            alert('Chat history cleared successfully!');
+        } catch (error) {
+            console.error('Error clearing chat history:', error);
+            alert('Error clearing chat history. Please try again.');
+        }
+    }
+}
+
 // Events data
 const eventsData = [
     {
@@ -65,7 +147,7 @@ userInput.addEventListener('keydown', function(e) {
 sendButton.addEventListener('click', sendMessage);
 
 // Add message to chat
-function addMessage(content, isUser = false) {
+function addMessage(content, isUser = false, saveToHistory = true) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
     
@@ -83,6 +165,16 @@ function addMessage(content, isUser = false) {
     
     // Scroll to bottom
     chatMessages.scrollTop = chatMessages.scrollHeight;
+    
+    // Save to history if logged in
+    if (saveToHistory && isLoggedIn) {
+        chatHistory.push({
+            content: content,
+            isUser: isUser,
+            timestamp: new Date().toISOString()
+        });
+        saveChatHistory();
+    }
 }
 
 // Show typing indicator
@@ -218,6 +310,16 @@ function generateResponse(message) {
         <p>Contact us at info@nextstep.org to learn more about volunteer opportunities!</p>`;
     }
     
+    // Chat history commands (for logged-in users)
+    if (lowerMessage.includes('clear chat') || lowerMessage.includes('delete history')) {
+        if (isLoggedIn) {
+            clearChatHistory();
+            return `<p>Your chat history has been cleared!</p>`;
+        } else {
+            return `<p>You need to be logged in to manage chat history. Please log in to save your conversations!</p>`;
+        }
+    }
+    
     // Default response
     return `<p>I'm here to help you learn about civic engagement and local events in Boca Raton! You can ask me about:</p>
     <ul>
@@ -227,6 +329,7 @@ function generateResponse(message) {
         <li>Volunteer opportunities</li>
         <li>How to contact us</li>
     </ul>
+    ${isLoggedIn ? '<p><em>💾 Your chat history is being saved automatically!</em></p>' : '<p><em>💡 Tip: Log in to save your chat history!</em></p>'}
     <p>What would you like to know?</p>`;
 }
 
@@ -255,9 +358,87 @@ async function sendMessage() {
         
         // Generate and add response
         const response = generateResponse(message);
-        addMessage(response);
+        addMessage(response, false);
         
         // Re-enable send button
         sendButton.disabled = false;
     }, 1000);
 }
+
+// Add clear chat button to the UI (only if logged in)
+function addClearChatButton() {
+    if (!isLoggedIn) return;
+    
+    const inputContainer = document.querySelector('.chat-input-container');
+    
+    // Check if button already exists
+    if (document.getElementById('clear-chat-btn')) return;
+    
+    const clearButton = document.createElement('button');
+    clearButton.id = 'clear-chat-btn';
+    clearButton.className = 'clear-chat-button';
+    clearButton.innerHTML = '🗑️ Clear History';
+    clearButton.onclick = clearChatHistory;
+    
+    inputContainer.insertBefore(clearButton, inputContainer.firstChild);
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+    checkLoginStatus();
+    
+    // Add clear button if logged in
+    if (isLoggedIn) {
+        addClearChatButton();
+    }
+    
+    // Listen for login/logout events
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'isLoggedIn') {
+            checkLoginStatus();
+            if (isLoggedIn) {
+                addClearChatButton();
+            }
+        }
+    });
+});
+
+// Make clearChatHistory available globally for button
+window.clearChatHistory = clearChatHistory;
+
+// Add styles for clear chat button dynamically
+const style = document.createElement('style');
+style.textContent = `
+.clear-chat-button {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+    font-family: 'Open Sans', sans-serif;
+}
+
+.clear-chat-button:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+}
+
+.clear-chat-button:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+    .clear-chat-button {
+        width: 100%;
+        margin-bottom: 0.75rem;
+    }
+}
+`;
+document.head.appendChild(style);

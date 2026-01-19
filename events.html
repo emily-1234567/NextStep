@@ -32,7 +32,7 @@
         <!-- Logo -->
         <div class="logo">
           <a href="index.html">
-            <img src="logo.png" alt="NextStep Logo" class="logo-image">
+            <img src="images/logo.png" alt="NextStep Logo" class="logo-image">
           </a>
         </div>
 
@@ -78,69 +78,112 @@
       </div>
     </main>
   
-    <footer>
-    <div class="footer-content">
-      <div class="footer-grid">
-        <!-- About Section -->
-        <div class="footer-section footer-about">
-          <h3>NEXTSTEP</h3>
-          <p>Empowering communities through civic engagement. Discover local events, connect with your neighbors, and
-            make a real difference in Boca Raton.</p>
-          <div class="social-links">
-            <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="social-link" aria-label="X (Twitter)"><i class="fab fa-x-twitter"></i></a>
-            <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-            <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-          </div>
-        </div>
-
-        <!-- Quick Links -->
-        <div class="footer-section">
-          <h4>Quick Links</h4>
-          <ul class="footer-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="map.html">Map</a></li>
-            <li><a href="events.html">Events</a></li>
-            <li><a href="chatbot.html">Compass</a></li>
-            <li><a href="contact.html">Contact Us</a></li>
-          </ul>
-        </div>
-
-        <!-- Resources -->
-        <div class="footer-section">
-          <h4>Resources</h4>
-          <ul class="footer-links">
-            <li><a href="#">About Us</a></li>
-            <li><a href="#">Blog</a></li>
-            <li><a href="#">FAQs</a></li>
-            <li><a href="#">Volunteer</a></li>
-            <li><a href="#">Partners</a></li>
-          </ul>
-        </div>
-
-        <!-- Newsletter -->
-        <div class="footer-section">
-          <h4>Stay Updated</h4>
-          <p style="opacity: 0.5; font-size: 0.95rem; margin-bottom: 1rem;">Subscribe to our newsletter for the latest
-            civic events and opportunities.</p>
-          <form class="newsletter-form" onsubmit="handleNewsletter(event)">
-            <input type="email" class="newsletter-input" placeholder="Your email" required>
-            <button type="submit" class="newsletter-button">Join</button>
-          </form>
+    <!-- Replace your existing <footer> section with this -->
+<footer>
+  <div class="footer-content">
+    <div class="footer-grid">
+      <!-- About Section -->
+      <div class="footer-section footer-about">
+        <h3>NEXTSTEP</h3>
+        <p>Empowering communities through civic engagement. Discover local events, connect with your neighbors, and make a real difference in Boca Raton.</p>
+        <div class="social-links">
+          <a href="https://facebook.com/nextstep" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Facebook">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="https://twitter.com/nextstep" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="X (Twitter)">
+            <i class="fab fa-x-twitter"></i>
+          </a>
+          <a href="https://instagram.com/nextstep" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://linkedin.com/company/nextstep" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn">
+            <i class="fab fa-linkedin-in"></i>
+          </a>
         </div>
       </div>
 
-      <!-- Footer Bottom -->
-      <div class="footer-bottom">
-        <p>&copy; 2025 NextStep. All rights reserved.</p>
-        <div class="footer-bottom-links">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
-          <a href="#">Accessibility</a>
-        </div>
+      <!-- Quick Links -->
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="map.html">Map</a></li>
+          <li><a href="events.html">Events</a></li>
+          <li><a href="chatbot.html">Compass</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <!-- Resources -->
+      <div class="footer-section">
+        <h4>Resources</h4>
+        <ul class="footer-links">
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="faqs.html">FAQs</a></li>
+          <li><a href="volunteer.html">Volunteer</a></li>
+          <li><a href="partners.html">Partners</a></li>
+        </ul>
+      </div>
+
+      <!-- Newsletter -->
+      <div class="footer-section">
+        <h4>Stay Updated</h4>
+        <p class="newsletter-description">Subscribe to our newsletter for the latest civic events and opportunities.</p>
+        <form class="newsletter-form" id="newsletter-form">
+          <input type="email" id="newsletter-email" class="newsletter-input" placeholder="Your email" required>
+          <button type="submit" class="newsletter-button">Join Newsletter</button>
+        </form>
+        <div id="newsletter-status" class="newsletter-status"></div>
       </div>
     </div>
-  </footer>
+
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <p>&copy; 2025 NextStep. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="accessibility.html">Accessibility</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Add this script before closing </body> tag -->
+<script>
+// Newsletter subscription handler
+document.getElementById('newsletter-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const emailInput = document.getElementById('newsletter-email');
+  const statusDiv = document.getElementById('newsletter-status');
+  const email = emailInput.value.trim();
+  
+  if (!email) {
+    statusDiv.textContent = 'Please enter a valid email address.';
+    statusDiv.className = 'newsletter-status error';
+    return;
+  }
+  
+  // Show loading state
+  statusDiv.textContent = 'Subscribing...';
+  statusDiv.className = 'newsletter-status loading';
+  
+  // Simulate API call
+  setTimeout(() => {
+    statusDiv.textContent = '✓ Successfully subscribed! Check your email.';
+    statusDiv.className = 'newsletter-status success';
+    emailInput.value = '';
+    
+    // Clear success message after 5 seconds
+    setTimeout(() => {
+      statusDiv.textContent = '';
+      statusDiv.className = 'newsletter-status';
+    }, 5000);
+  }, 1000);
+});
+</script>
 
   <!-- Load centralized event data FIRST -->
   <script src="events-data.js"></script>
