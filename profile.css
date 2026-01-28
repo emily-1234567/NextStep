@@ -648,11 +648,11 @@ body {
 .photo-overlay::before {
     /* Pseudo-element for camera emoji */
     
-    content: "📷";
+    content: "+";
     /* Camera emoji icon
        Universal symbol for photo
        No need for image file or icon font */
-    
+    color: white;
     font-size: 20px;
     /* Large emoji size
        Easily visible and recognizable */
@@ -857,7 +857,6 @@ body {
     color: white;
     /* White text for contrast on blue
        Ensures readability */
-    
     text-align: center;
     /* Centers number and label
        Standard pattern for stat displays
@@ -880,6 +879,7 @@ body {
     margin-bottom: 5px;
     /* Small space below number (above label)
        5px keeps number and label grouped */
+
 }
 
 /* Stat Label */

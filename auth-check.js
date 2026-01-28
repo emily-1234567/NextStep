@@ -192,7 +192,7 @@ function createLoginOverlay() {
   `;
   
   document.body.appendChild(overlay);
-  document.body.style.overflow = 'hidden'; // Prevent scrolling
+  document.body.style.overflow = 'hidden';
 }
 
 // Check authentication and update navigation
@@ -204,7 +204,7 @@ function checkAuth() {
       // User is logged in - replace login with profile dropdown
       const displayName = user.displayName || user.email.split('@')[0];
       const initials = getInitials(displayName);
-      const photoURL = user.photoURL;
+      const photoURL = user.photoURL || localStorage.getItem('profilePhoto') || localStorage.getItem('userPhotoURL');
       const firstName = displayName.split(' ')[0];
       
       // Save user data to localStorage for profile page
@@ -228,29 +228,29 @@ function checkAuth() {
           <button class="profile-btn" onclick="toggleProfileMenu()">
             ${photoURL 
               ? `<img src="${photoURL}" alt="Profile" class="profile-photo-nav">` 
-              : `<span class="profile-initials">${initials}</span>`
+              : `<span class="profile-initials";">${initials}</span>`
             }
             <span class="profile-name">${firstName}</span>
             <span class="dropdown-arrow">▼</span>
           </button>
           <div class="profile-menu" id="profile-menu">
             <div class="profile-menu-header">
-              <strong>${displayName}</strong>
+              <strong style="color: var(--text-primary);">${displayName}</strong>
               <span class="profile-menu-email">${user.email}</span>
             </div>
             <div class="profile-menu-divider"></div>
             <a href="profile.html" class="profile-menu-item">
-              <span class="menu-icon">👤</span> My Profile
+              <span class="menu-icon"><i class="fa-solid fa-user"></i></span> My Profile
             </a>
             <a href="profile.html#settings" class="profile-menu-item">
-              <span class="menu-icon">⚙️</span> Settings
+              <span class="menu-icon"><i class="fa-solid fa-gear"></i></span> Settings
             </a>
             <a href="badges.html" class="profile-menu-item">
-              <span class="menu-icon">🏆</span> Badges
+              <span class="menu-icon"><i class="fa-solid fa-trophy"></i></span> Badges
             </a>
             <div class="profile-menu-divider"></div>
             <a href="#" onclick="logout(event)" class="profile-menu-item logout">
-              <span class="menu-icon">🚪</span> Logout
+              <span class="menu-icon"><i class="fa-solid fa-arrow-right-from-bracket"></i></span> Logout
             </a>
           </div>
         </div>
@@ -262,6 +262,18 @@ function checkAuth() {
         const signupItem = signupLink.closest('.navbar-item');
         if (signupItem) signupItem.remove();
       }
+      
+      // Listen for storage changes to update photo in real-time
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'profilePhoto' || e.key === 'userPhotoURL') {
+          updateNavPhoto(e.newValue);
+        }
+      });
+      
+      // Also listen for custom event from profile page
+      window.addEventListener('profilePhotoUpdated', function(e) {
+        updateNavPhoto(e.detail.photoURL);
+      });
       
     } else if (!user) {
       // User not logged in - clear any saved data
@@ -283,6 +295,31 @@ function checkAuth() {
       }
     }
   });
+}
+
+// Function to update nav photo dynamically
+function updateNavPhoto(photoURL) {
+  const profileBtn = document.querySelector('.profile-btn');
+  if (!profileBtn) return;
+  
+  const existingPhoto = profileBtn.querySelector('.profile-photo-nav');
+  const existingInitials = profileBtn.querySelector('.profile-initials');
+  
+  if (photoURL) {
+    // Replace initials with photo or update existing photo
+    if (existingInitials) {
+      existingInitials.outerHTML = `<img src="${photoURL}" alt="Profile" class="profile-photo-nav">`;
+    } else if (existingPhoto) {
+      existingPhoto.src = photoURL;
+    }
+  } else {
+    // Replace photo with initials
+    if (existingPhoto) {
+      const user = auth.currentUser;
+      const name = user?.displayName || user?.email?.split('@')[0] || 'User';
+      existingPhoto.outerHTML = `<span class="profile-initials">${getInitials(name)}</span>`;
+    }
+  }
 }
 
 // Toggle profile dropdown menu
@@ -331,6 +368,7 @@ window.logout = async function(event) {
 
 // Make functions globally available
 window.getInitials = getInitials;
+window.updateNavPhoto = updateNavPhoto;
 
 // Initialize authentication check
 checkAuth();

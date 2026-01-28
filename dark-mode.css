@@ -228,7 +228,7 @@ body {
 .event-card,
 .badge-card,
 .info-card,
-.stat-card,
+[data-theme="dark"].stat-card,
 .login-card,
 .form-card,
 .contact-card,
@@ -244,9 +244,6 @@ body {
 [data-theme="dark"] .info-card {
   border: 1px solid var(--border-color);
 }
-
-
-
 
 /* Force light text in dark mode for specific elements */
 [data-theme="dark"] h1,
@@ -333,36 +330,35 @@ select:focus {
 }
 
 /* Filter Buttons */
-.filter-btn {
-  background: var(--hover-bg);
+[data-theme="dark"] .filter-btn {
+  background: var(--bg-secondary);
   color: var(--text-primary);
   border-color: var(--border-color);
 }
 /* Filter button hover - dark mode specific */
 [data-theme="dark"] .filter-btn:hover {
-  background: var(--hover-bg);
+  background: var(--hover-bg) !important;
   color: var(--accent-secondary);
 }
 [data-theme="dark"] .filter-btn.active:hover {
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)) !important;
   color: white;
 }
 
-.filter-btn.active {
+[data-theme="dark"] .filter-btn.active {
   background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
   color: white;
 }
 
 
 /* Profile Dropdown */
-.profile-button {
-  background: var(--bg-secondary);
+[data-theme="dark"] .profile-button {
   color: var(--text-primary);
   border-color: var(--border-color);
 }
 
 .profile-dropdown {
-  background: var(--bg-secondary);
+  background: var(--nav-bg);
   border-color: var(--border-color);
 }
 
@@ -641,7 +637,7 @@ textarea:focus-visible {
 
 /* Events Page */
 [data-theme="dark"] .filter-buttons-horizontal {
-  background: var(--bg-secondary);
+  background: var(--bg-secondary)!important;
   border: 1px solid var(--border-color);
 }
 [data-theme="dark"] .filter-buttons-horizontal label:hover {
@@ -750,14 +746,15 @@ textarea:focus-visible {
   border: 1px solid var(--border-color);
 }
 
-[data-theme="dark"] .stat-number {
+
+/* Progress badges */
+[data-theme="dark"] .progress-bar {
   background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+}
+[data-theme="dark"] .progress-bar-container {
+  background: var(--bg-tertiary);
 }
 
-/* Progress text in badges */
 [data-theme="dark"] .progress-text {
   color: var(--text-secondary);
 }
@@ -855,7 +852,9 @@ textarea:focus-visible {
 [data-theme="dark"] .profile-photo {
     border-color: var(--accent-primary);
 }
-
+[data-theme="dark"] .profile-initials {
+    background-color: var(--accent-primary);
+}
 [data-theme="dark"] .profile-initials-large {
     background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
     border-color: var(--accent-primary);
@@ -878,7 +877,6 @@ textarea:focus-visible {
 /* Stats Cards */
 [data-theme="dark"] .stat-card {
     background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-    color: white;
 }
 
 /* Settings Sections */
@@ -970,4 +968,142 @@ textarea:focus-visible {
 }
 [data-theme="dark"] .carousel-dots button.active {
   background: white;
+}
+
+/* Add these styles to the END of dark-mode.css */
+
+/* ============================================
+   EVENT POPUP DARK MODE FIXES
+   ============================================ */
+
+/* 1. Event Popup - Dark mode background and text */
+[data-theme="dark"] .event-popup-overlay {
+    background: rgba(0, 0, 0, 0.85);
+}
+
+[data-theme="dark"] .event-popup {
+    background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .event-popup-title,
+[data-theme="dark"] .event-popup-value {
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .event-popup-organizer,
+[data-theme="dark"] .event-popup-label,
+[data-theme="dark"] .capacity-text {
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .event-popup-info-card {
+    background: var(--bg-tertiary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .event-popup-tag {
+    background: var(--hover-bg);
+    color: var(--accent-secondary);
+}
+
+/* 2. Map Popup - Fix gray text visibility */
+[data-theme="dark"] .leaflet-popup-content-wrapper {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .leaflet-popup-content {
+    color: var(--text-primary) !important;
+}
+
+/* Fix the date/location/registration text in map popup */
+[data-theme="dark"] .custom-popup .leaflet-popup-content div[style*="color: #64748b"] {
+    color: var(--text-secondary) !important;
+}
+
+/* Make all text in map popup visible */
+[data-theme="dark"] .leaflet-popup-content strong {
+    color: var(--accent-secondary) !important;
+}
+
+/* 4. Category-colored headers in popup (both light and dark mode) */
+/* Political - Blue */
+.event-popup-header.political,
+.custom-popup .category-political {
+    background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+}
+
+/* Youth - Orange */
+.event-popup-header.youth,
+.custom-popup .category-youth {
+    background: linear-gradient(135deg, #fb923c, #f59e0b) !important;
+}
+
+/* Innovation - Pink */
+.event-popup-header.innovation,
+.custom-popup .category-innovation {
+    background: linear-gradient(135deg, #ec4899, #db2777) !important;
+}
+
+/* Environmental - Green */
+.event-popup-header.environmental,
+.custom-popup .category-environmental {
+    background: linear-gradient(135deg, #34d399, #10b981) !important;
+}
+
+/* Education - Purple */
+.event-popup-header.education,
+.custom-popup .category-education {
+    background: linear-gradient(135deg, #ba3eeb, #b325eb) !important;
+}
+
+/* 5. Map zoom controls dark mode */
+[data-theme="dark"] .leaflet-control-zoom a {
+    background: var(--bg-secondary) !important;
+    color: var(--accent-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+[data-theme="dark"] .leaflet-control-zoom a:hover {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)) !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .stat-card .stat-number,
+[data-theme="dark"] .stat-card .stat-label {
+    color: rgb(255, 254, 254) !important;
+}
+
+
+/* Additional fixes for map filter buttons in dark mode */
+[data-theme="dark"] .filter-buttons {
+    background: rgba(10, 22, 40, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .filter-buttons label {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .filter-buttons label:hover {
+    background: var(--hover-bg);
+    color: var(--accent-secondary);
+}
+
+
+/* Ensure popup action buttons are visible in dark mode */
+[data-theme="dark"] .event-popup-btn.btn-primary {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    color: white;
+}
+
+[data-theme="dark"] .event-popup-btn.btn-secondary {
+    background: var(--bg-tertiary);
+    color: var(--accent-secondary);
+    border-color: var(--accent-secondary);
+}
+
+[data-theme="dark"] .event-popup-btn.btn-secondary:hover {
+    background: var(--hover-bg);
 }

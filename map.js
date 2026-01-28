@@ -1,7 +1,4 @@
-// map.js - Updated to use centralized data and support detail popups
-// Load events-data.js and event-popup.js BEFORE this file
-
-// Exact centroid of Boca Raton
+// Exact location of Boca Raton
 const boca = [26.3684, -80.1289];
 var map = L.map('map', {
     zoomControl: false
@@ -111,6 +108,24 @@ const categoryMap = {
     education: education
 };
 
+// Category-specific gradients (matching events.css and events-popup.js)
+const categoryGradients = {
+    political: 'linear-gradient(135deg, #3b82f6, #2563eb)',
+    youth: 'linear-gradient(135deg, #fb923c, #f59e0b)',
+    innovation: 'linear-gradient(135deg, #c95444, #ca3d2a)',
+    environmental: 'linear-gradient(135deg, #34d399, #10b981)',
+    education: 'linear-gradient(135deg, #ba3eeb, #b325eb)'
+};
+
+// Category-specific icon colors
+const categoryIconColors = {
+    political: '#2563eb',
+    youth: '#f59e0b',
+    innovation: '#ca3d2a',
+    environmental: '#10b981',
+    education: '#b325eb'
+};
+
 // Create markers from centralized event data
 window.eventsData.forEach(event => {
     // Use custom icon based on category
@@ -118,18 +133,22 @@ window.eventsData.forEach(event => {
         icon: customIcons[event.category]
     });
     
-    // Create popup content with "View Details" button
+    // Get category-specific gradient and icon color
+    const gradient = categoryGradients[event.category];
+    const iconColor = categoryIconColors[event.category];
+    
+    // Create popup content with category-specific colors
     const popupContent = `
         <div style="min-width: 250px; font-family: 'Open Sans', sans-serif;">
-            <div style="background: linear-gradient(135deg, #2563eb, #3b82f6); color: white; padding: 12px; margin: -12px -12px 12px -12px; border-radius: 8px 8px 0 0;">
+            <div style="background: ${gradient}; color: white; padding: 12px; margin: -12px -12px 12px -12px; border-radius: 8px 8px 0 0;">
                 <span style="font-weight: bold; font-size: 18px; display: block; margin-bottom: 4px;">${event.title}</span>
                 <span style="font-size: 11px; text-transform: uppercase; background: rgba(255,255,255,0.2); padding: 3px 8px; border-radius: 10px; display: inline-block;">${event.category}</span>
             </div>
             <div style="padding: 0 4px;">
                 <div style="margin-bottom: 10px;">
-                    <div style="color: #64748b; font-size: 13px; margin-bottom: 4px;"><strong style="color: #2563eb;">📅</strong> ${event.date} at ${event.time}</div>
-                    <div style="color: #64748b; font-size: 13px; margin-bottom: 4px;"><strong style="color: #2563eb;">📍</strong> ${event.location}</div>
-                    <div style="color: #64748b; font-size: 13px;"><strong style="color: #2563eb;">👥</strong> ${event.registered}/${event.capacity} registered</div>
+                    <div style="color: #64748b; font-size: 13px; margin-bottom: 4px;"><strong style="color: ${iconColor};"><i class="fa-regular fa-calendar"></i></strong> ${event.date} at ${event.time}</div>
+                    <div style="color: #64748b; font-size: 13px; margin-bottom: 4px;"><strong style="color: ${iconColor};"><i class="fa-solid fa-location-dot"></i></strong> ${event.location}</div>
+                    <div style="color: #64748b; font-size: 13px;"><strong style="color: ${iconColor};"><i class="fa-regular fa-user"></i></strong> ${event.registered}/${event.capacity} registered</div>
                 </div>
                 <p style="color: #475569; font-size: 14px; line-height: 1.5; margin: 12px 0;">${event.description}</p>
                 <button 
@@ -137,7 +156,7 @@ window.eventsData.forEach(event => {
                     style="
                         width: 100%;
                         padding: 10px 16px;
-                        background: linear-gradient(135deg, #2563eb, #3b82f6);
+                        background: ${gradient};
                         color: white;
                         border: none;
                         border-radius: 8px;
@@ -147,10 +166,10 @@ window.eventsData.forEach(event => {
                         transition: all 0.3s ease;
                         font-family: 'Open Sans', sans-serif;
                     "
-                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(37,99,235,0.4)'"
+                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.3)'"
                     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'"
                 >
-                    📋 View Full Details
+                    View More Details
                 </button>
             </div>
         </div>
@@ -158,7 +177,7 @@ window.eventsData.forEach(event => {
     
     marker.bindPopup(popupContent, {
         maxWidth: 300,
-        className: 'custom-popup'
+        className: 'custom-popup category-' + event.category
     });
     
     // Add marker to appropriate category layer

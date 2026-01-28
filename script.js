@@ -313,28 +313,33 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ============================================
-// TYPEWRITER ANIMATION FOR "ENGAGE IN" LIST
+// CONTINUOUS INFINITE TYPEWRITER ANIMATION
 // ============================================
 
-// Category text mapping
+// Category text mapping with colors
 const categoryText = {
-  political: "Political",
-  environmental: "Environmental",
-  innovative: "Innovative",
-  youth: "Youth",
-  educational: "Educational"
+  political: { text: "Political", color: "#2563eb" },
+  environmental: { text: "Environmental", color: "#10b981" },
+  innovative: { text: "Innovative", color: "#ec4899" },
+  youth: { text: "Youth", color: "#f59e0b" },
+  educational: { text: "Educational", color: "#8b5cf6" }
 };
 
-let typewriterAnimationTriggered = false;
-let isAnimating = false; // Prevent animation conflicts
+let isAnimating = false;
+let animationStopped = false; // Flag to stop animation when scrolled away
 
-// Typewriter function
+// Typewriter function - types text character by character
 function typeWriter(element, text, speed = 50) {
   return new Promise((resolve) => {
     let i = 0;
     const cursor = element;
     
     function type() {
+      if (animationStopped) {
+        resolve();
+        return;
+      }
+      
       if (i < text.length) {
         cursor.textContent += text.charAt(i);
         i++;
@@ -350,64 +355,125 @@ function typeWriter(element, text, speed = 50) {
   });
 }
 
-// Main animation sequence - forward
-async function animateEngageList() {
-  if (isAnimating) return;
-  isAnimating = true;
+// Backspace function - deletes text character by character
+function backspaceWriter(element, speed = 30) {
+  return new Promise((resolve) => {
+    const text = element.textContent;
+    let i = text.length;
+    
+    function backspace() {
+      if (animationStopped) {
+        resolve();
+        return;
+      }
+      
+      if (i > 0) {
+        element.textContent = text.substring(0, i - 1);
+        i--;
+        setTimeout(backspace, speed);
+      } else {
+        // Re-add blinking cursor for next typing
+        element.classList.remove('done');
+        resolve();
+      }
+    }
+    
+    backspace();
+  });
+}
+
+// Main infinite animation loop - SINGLE LINE ONLY
+async function infiniteTypewriterLoop() {
+  if (animationStopped) return;
   
+  const engageItems = document.querySelectorAll('.engage-item');
+  
+  // Only use the FIRST item - hide all others permanently
+  engageItems.forEach((item, index) => {
+    if (index !== 0) {
+      item.style.display = 'none';
+    } else {
+      // Style the single visible item - bigger and centered
+      item.style.fontSize = '65px';
+      item.style.textAlign = 'center';
+      item.style.fontWeight = '700';
+    }
+  });
+  
+  const singleItem = engageItems[0];
+  const typewriterSpan = singleItem.querySelector('.typewriter-text');
+  
+  // Array of all categories to cycle through
+  const allCategories = Object.entries(categoryText);
+  let currentIndex = 0;
+  
+  while (!animationStopped) {
+    const [categoryName, categoryData] = allCategories[currentIndex];
+    const currentText = categoryData.text;
+    const currentColor = categoryData.color;
+    
+    // Change color for this category
+    typewriterSpan.style.color = currentColor;
+    
+    // Make item visible
+    singleItem.classList.add('typing');
+    
+    // Type the text
+    await typeWriter(typewriterSpan, currentText, 50);
+    
+    // Pause with text visible and blinking cursor
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    if (animationStopped) break;
+    
+    // Backspace the text
+    await backspaceWriter(typewriterSpan, 30);
+    
+    // Small pause before next category
+    await new Promise(resolve => setTimeout(resolve, 200));
+    
+    if (animationStopped) break;
+    
+    // Move to next category (loop back to start)
+    currentIndex = (currentIndex + 1) % allCategories.length;
+  }
+}
+
+// Slide in animations for paragraph
+function animateParagraph() {
   const paragraphSide = document.querySelector('.paragraph-side');
   const engageSide = document.querySelector('.engage-side');
   const engageLabel = document.querySelector('.engage-label');
-  const engageItems = document.querySelectorAll('.engage-item');
+  
+  // Center the engage side vertically with paragraph
+  engageSide.style.display = 'flex';
+  engageSide.style.flexDirection = 'column';
+  engageSide.style.justifyContent = 'center';
+  engageSide.style.alignItems = 'center';
   
   // Slide in engage side from left
   setTimeout(() => {
     engageSide.classList.add('slide-in');
-  }, 100);
-  // CHANGED: Reduced from 200ms to 100ms - faster slide-in
+  }, 200);
   
   // Show "Engage in:" label
   engageLabel.classList.add('show');
   
-  // Wait a bit before starting typewriter
-  await new Promise(resolve => setTimeout(resolve, 250));
-  // CHANGED: Reduced from 500ms to 250ms - less wait before typing starts
-  
-  // Type each category one by one
-  for (let item of engageItems) {
-    const category = item.getAttribute('data-category');
-    const text = categoryText[category];
-    const typewriterSpan = item.querySelector('.typewriter-text');
-    
-    // Make item visible
-    item.classList.add('typing');
-    
-    // Type the text (30ms per character = faster typing)
-    await typeWriter(typewriterSpan, text, 30);
-    // CHANGED: Reduced from 50ms to 30ms - faster typing speed
-    
-    // Small pause between words
-    await new Promise(resolve => setTimeout(resolve, 80));
-    // CHANGED: Reduced from 150ms to 80ms - less pause between words
-  }
-  
-  // Slide in paragraph from right after list is complete
+  // Slide in paragraph from right
   setTimeout(() => {
     paragraphSide.classList.add('slide-in');
-  }, 150);
-  // CHANGED: Reduced from 300ms to 150ms - paragraph appears faster
-  
-  isAnimating = false;
+  }, 800);
 }
 
-// Reverse animation - when scrolling back up
-function reverseEngageAnimation() {
-  if (isAnimating) return;
-  
+// Reset animation
+function resetAnimation() {
   const paragraphSide = document.querySelector('.paragraph-side');
   const engageSide = document.querySelector('.engage-side');
   const engageLabel = document.querySelector('.engage-label');
   const engageItems = document.querySelectorAll('.engage-item');
+  
+  // Stop any running animation
+  animationStopped = true;
   
   // Remove slide-in classes
   paragraphSide.classList.remove('slide-in');
@@ -421,12 +487,20 @@ function reverseEngageAnimation() {
     typewriterSpan.textContent = '';
     typewriterSpan.classList.remove('done');
   });
-  
-  // Reset the trigger flag so animation can play again
-  typewriterAnimationTriggered = false;
 }
 
-// Intersection Observer to trigger animation when scrolled into view
+// Start animation when section comes into view
+function startAnimation() {
+  animationStopped = false;
+  animateParagraph();
+  
+  // Start infinite typewriter loop after paragraph slides in
+  setTimeout(() => {
+    infiniteTypewriterLoop();
+  }, 1000);
+}
+
+// Intersection Observer to trigger animation
 function setupTypewriterObserver() {
   const firstPointSection = document.querySelector('.first-point');
   
@@ -434,13 +508,12 @@ function setupTypewriterObserver() {
   
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting && !typewriterAnimationTriggered) {
-        // Scrolling down - trigger animation
-        typewriterAnimationTriggered = true;
-        animateEngageList();
-      } else if (!entry.isIntersecting && typewriterAnimationTriggered) {
-        // Scrolled away (up or down) - reverse animation
-        reverseEngageAnimation();
+      if (entry.isIntersecting && animationStopped) {
+        // Section came into view - start animation
+        startAnimation();
+      } else if (!entry.isIntersecting && !animationStopped) {
+        // Section left view - reset animation
+        resetAnimation();
       }
     });
   }, {

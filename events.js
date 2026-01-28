@@ -193,7 +193,7 @@ function renderEvents(filter = 'all') {
                     onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px ${isCompleted ? 'rgba(148, 163, 184, 0.4)' : 'rgba(16, 185, 129, 0.4)'}'"
                     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'"
                 >
-                    ${isCompleted ? '✓ Completed (Click to Undo)' : 'Mark as Completed'}
+                    ${isCompleted ? '✓ Completed' : 'Mark as Completed'}
                 </button>
                 <button 
                     class="view-details-btn"
@@ -214,7 +214,7 @@ function renderEvents(filter = 'all') {
                     onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(37, 99, 235, 0.4)'"
                     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'"
                 >
-                    📋 View Full Details
+                    View More Details
                 </button>
             </div>
         </div>

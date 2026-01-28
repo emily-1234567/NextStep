@@ -264,7 +264,7 @@ function renderBadges(filter = 'all') {
         const earned = isBadgeEarned(badge);
         // Calculate progress percentage (max 100%)
         const progressPercent = Math.min((progress / badge.required) * 100, 100);
-        
+    
         // Create badge card div element
         const badgeCard = document.createElement('div');
         badgeCard.className = `badge-card ${earned ? 'earned' : 'locked'}`; // Add earned/locked class
@@ -278,7 +278,7 @@ function renderBadges(filter = 'all') {
         badgeCard.innerHTML = `
             ${earned 
                 ? '<div class="earned-badge">✓ Earned</div>' // Show earned badge
-                : '<div class="locked-badge">🔒 Locked</div>' // Show locked badge
+                : '<div class="locked-badge"><i class="fa-solid fa-lock"></i> Lock</div>' // Show locked badge
             }
             <div class="badge-category category-${badge.category}">
                 ${badge.category}
@@ -288,16 +288,17 @@ function renderBadges(filter = 'all') {
             </div>
             <div class="badge-name">${badge.name}</div>
             <div class="badge-description">${badge.description}</div>
-            ${!earned ? `
-                <div class="badge-progress">
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: ${progressPercent}%"></div>
-                    </div>
-                    <div class="progress-text">
-                        ${progress} / ${badge.required}
+            <div class="badge-progress">
+                <div class="progress-bar-container">
+                    <div 
+                        class="progress-bar ${earned ? 'completed' : ''}" 
+                        style="width: ${progressPercent}%">
                     </div>
                 </div>
-            ` : ''} 
+                <div class="progress-text">
+                    ${progress} / ${badge.required}
+                </div>
+            </div>
         `;
         
         // Add the badge card to the grid
@@ -314,7 +315,7 @@ function renderBadges(filter = 'all') {
 function updateStats() {
     // Calculate earned badges count
     const earnedCount = badges.filter(b => isBadgeEarned(b)).length;
-    // Get total badges count
+    // Get total badges count 
     const totalCount = badges.length;
     // Calculate completion percentage
     const completionPercent = Math.round((earnedCount / totalCount) * 100);

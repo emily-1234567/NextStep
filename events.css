@@ -746,7 +746,7 @@
 .event-header.innovation {
     /* Red gradient for innovation/technology events */
     
-    background: linear-gradient(135deg, #c95444, #ca3d2a);
+    background: linear-gradient(135deg, #ec4899, #db2777) !important;
     /* Diagonal red gradient
        Bold, attention-grabbing color
        Conveys energy and forward-thinking
