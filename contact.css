@@ -1,363 +1,480 @@
-/* Contact Page Styles */
+/* ===================================
+   CONTACT PAGE STYLES
+   Complete styling for the contact page including:
+   - Main layout and header
+   - Two-column grid layout
+   - Contact information cards
+   - Multi-step contact form
+   - FAQ accordion section
+   - Responsive mobile design
+   =================================== */
 
+/* Main Contact Page Container */
+/* Sets up the overall page structure with gradient background */
 .contact-main {
-    padding-top: 100px;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+    padding-top: 100px; /* Space for fixed navbar */
+    min-height: 100vh; /* Ensure page fills viewport height */
+    background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%); /* Soft blue gradient */
 }
 
+/* Contact Page Header Section */
+/* Centers the page title and subtitle */
 .contact-header {
     text-align: center;
-    padding: 2rem 1rem 3rem;
-    max-width: 800px;
-    margin: 0 auto;
+    padding: 2rem 1rem 3rem; /* Vertical and horizontal spacing */
+    max-width: 800px; /* Constrain width for readability */
+    margin: 0 auto; /* Center horizontally */
 }
 
+/* Main Heading with Gradient Text Effect */
 .contact-header h1 {
     font-size: 3rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #2563eb, #3b82f6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    font-weight: 800; /* Extra bold */
+    background: linear-gradient(135deg, #2563eb, #3b82f6); /* Blue gradient */
+    -webkit-background-clip: text; /* Clip background to text (WebKit browsers) */
+    -webkit-text-fill-color: transparent; /* Make text transparent to show gradient */
+    background-clip: text; /* Standard property */
     margin-bottom: 1rem;
 }
 
+/* Subtitle/Description Text */
 .contact-header p {
     font-size: 1.3rem;
-    color: #64748b;
-    font-weight: 500;
+    color: #64748b; /* Muted gray-blue color */
+    font-weight: 500; /* Medium weight */
 }
 
-/* Two Column Layout */
+/* ===================================
+   TWO COLUMN LAYOUT
+   =================================== */
+
+/* Main Container for Contact Page Content */
+/* Creates a two-column grid layout for info sidebar and form */
 .contact-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 2rem 4rem;
+    max-width: 1200px; /* Maximum container width */
+    margin: 0 auto; /* Center container */
+    padding: 0 2rem 4rem; /* Horizontal padding and bottom spacing */
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    align-items: start;
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    gap: 2rem; /* Space between columns */
+    align-items: start; /* Align items to top of grid */
 }
 
-/* Contact Info Sidebar */
+/* ===================================
+   CONTACT INFO SIDEBAR
+   =================================== */
+
+/* Sidebar Container for Contact Information Cards */
+/* Stacks info cards vertically with consistent spacing */
 .contact-info-sidebar {
     display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+    flex-direction: column; /* Stack cards vertically */
+    gap: 1.5rem; /* Space between cards */
 }
 
+/* Individual Information Card */
+/* White card with shadow and hover effects */
 .info-card {
     background: white;
     padding: 2rem;
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08); /* Soft shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover animation */
 }
 
+/* Hover Effect for Info Cards */
+/* Lifts card and intensifies shadow on hover */
 .info-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.15);
+    transform: translateY(-3px); /* Move card up slightly */
+    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.15); /* Larger, blue-tinted shadow */
 }
 
+/* Icon Container within Info Card */
+/* Gradient background circle for icons */
 .info-card-icon {
     width: 50px;
     height: 50px;
-    background: linear-gradient(135deg, #2563eb, #3b82f6);
-    border-radius: 12px;
+    background: linear-gradient(135deg, #2563eb, #3b82f6); /* Blue gradient */
+    border-radius: 12px; /* Rounded square */
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: center; /* Center icon vertically */
+    justify-content: center; /* Center icon horizontally */
     font-size: 1.5rem;
     margin-bottom: 1rem;
 }
 
+/* Info Card Heading */
 .info-card h3 {
-    color: #2563eb;
+    color: #2563eb; /* Brand blue */
     font-size: 1.3rem;
     margin-bottom: 0.75rem;
-    font-weight: 700;
+    font-weight: 700; /* Bold */
 }
 
+/* Info Card Text Content */
 .info-card p {
-    color: #64748b;
+    color: #64748b; /* Muted text color */
     margin-bottom: 0.5rem;
-    line-height: 1.6;
+    line-height: 1.6; /* Comfortable reading height */
 }
 
+/* Links within Info Cards */
 .info-card a {
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.3s;
+    text-decoration: none; /* Remove underline */
+    font-weight: 600; /* Semi-bold */
+    transition: color 0.3s; /* Smooth color change */
 }
 
+/* Hover Effect for Card Links */
 .info-card a:hover {
-    color: #1e40af;
-    text-decoration: underline;
+    color: #1e40af; /* Darker blue on hover */
+    text-decoration: underline; /* Add underline on hover */
 }
 
-/* Availability Status */
+/* ===================================
+   AVAILABILITY STATUS INDICATOR
+   =================================== */
+
+/* Status Display Container */
+/* Shows online/offline status with animated dot */
 .availability-status {
     margin-top: 1rem;
     padding: 0.75rem;
-    background: #f1f5f9;
+    background: #f1f5f9; /* Light gray background */
     border-radius: 8px;
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    align-items: center; /* Vertically center content */
+    gap: 0.5rem; /* Space between dot and text */
     font-size: 0.95rem;
     font-weight: 600;
 }
 
+/* Animated Status Dot */
+/* Pulsing green dot when online */
 .status-dot {
     width: 10px;
     height: 10px;
-    border-radius: 50%;
-    background: #10b981;
-    animation: pulse 2s infinite;
+    border-radius: 50%; /* Perfect circle */
+    background: #10b981; /* Green for online */
+    animation: pulse 2s infinite; /* Continuous pulse animation */
 }
 
+/* Offline Status Dot */
+/* Gray, non-animated dot when offline */
 .status-dot.offline {
-    background: #94a3b8;
-    animation: none;
+    background: #94a3b8; /* Gray color */
+    animation: none; /* Disable pulse animation */
 }
 
+/* Pulse Animation for Status Dot */
+/* Fades in and out to draw attention */
 @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+    0%, 100% { opacity: 1; } /* Full opacity at start and end */
+    50% { opacity: 0.5; } /* Half opacity in middle */
 }
 
+/* ===================================
+   SOCIAL MEDIA LINKS
+   =================================== */
+
+/* Social Links Container */
+/* Horizontal row of social media icons */
 .social-links-card {
     display: flex;
-    gap: 0.75rem;
+    gap: 0.75rem; /* Space between icons */
     margin-top: 1rem;
 }
 
+/* Individual Social Media Button */
+/* Square button with gradient background and icon */
 .social-link-btn {
     width: 45px;
     height: 45px;
-    background: linear-gradient(135deg, #2563eb, #3b82f6);
-    color: rgb(255, 255, 255);
-    border-radius: 10px;
+    background: linear-gradient(135deg, #2563eb, #3b82f6); /* Blue gradient */
+    color: rgb(255, 255, 255); /* White icon */
+    border-radius: 10px; /* Rounded corners */
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: center; /* Center icon vertically */
+    justify-content: center; /* Center icon horizontally */
     text-decoration: none;
     font-size: 1.3rem;
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: transform 0.3s, box-shadow 0.3s; /* Smooth hover effects */
 }
 
+/* Hover Effect for Social Buttons */
 .social-link-btn:hover {
-    color: white !important;
-    transform: translateY(-3px);
-    text-decoration: none;
+    color: white !important; /* Keep icon white */
+    transform: translateY(-3px); /* Lift button up */
+    text-decoration: none; /* Prevent underline */
 }
 
+/* Remove Underline from Icons */
 .social-link-btn i {
     text-decoration: none !important;
 }
 
+/* Remove Underline from All Link States */
+/* Ensures no underline in any state (visited, active, etc.) */
 .social-link-btn:visited,
 .social-link-btn:link,
 .social-link-btn:active {
     text-decoration: none !important;
 }
 
-/* Contact Form */
+/* ===================================
+   CONTACT FORM CARD
+   =================================== */
+
+/* Main Form Container Card */
+/* White card containing the entire multi-step form */
 .form-card {
     background: white;
     padding: 3rem;
     border-radius: 15px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); /* Prominent shadow */
 }
 
+/* Form Card Heading */
 .form-card h2 {
-    color: #1e40af;
+    color: #1e40af; /* Dark blue */
     font-size: 2rem;
     margin-bottom: 2rem;
     font-weight: 700;
 }
 
-/* Multi-Step Progress Bar */
+/* ===================================
+   MULTI-STEP PROGRESS BAR
+   =================================== */
+
+/* Progress Indicator Container */
+/* Shows current step in the multi-step form */
 .form-progress {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    align-items: center; /* Vertically center items */
+    justify-content: space-between; /* Spread steps evenly */
     margin-bottom: 2.5rem;
     position: relative;
 }
 
+/* Individual Step Indicator */
+/* Contains circle number and label */
 .progress-step {
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Stack circle above label */
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.5rem; /* Space between circle and label */
     position: relative;
-    z-index: 2;
+    z-index: 2; /* Ensure step appears above connecting line */
 }
 
+/* Step Number Circle */
+/* Circular indicator showing step number */
 .step-circle {
     width: 45px;
     height: 45px;
-    border-radius: 50%;
-    background: #e2e8f0;
-    color: #94a3b8;
+    border-radius: 50%; /* Perfect circle */
+    background: #e2e8f0; /* Light gray (inactive) */
+    color: #94a3b8; /* Gray text (inactive) */
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: center; /* Center number vertically */
+    justify-content: center; /* Center number horizontally */
     font-weight: 700;
     font-size: 1.1rem;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease; /* Smooth state changes */
 }
 
+/* Active Step Circle */
+/* Blue gradient for current step */
 .progress-step.active .step-circle {
-    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    background: linear-gradient(135deg, #2563eb, #3b82f6); /* Blue gradient */
     color: white;
-    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); /* Glowing shadow */
 }
 
+/* Completed Step Circle */
+/* Green background for finished steps */
 .progress-step.completed .step-circle {
-    background: #10b981;
+    background: #10b981; /* Green */
     color: white;
 }
 
+/* Step Label Text */
+/* Text below each step circle */
 .step-label {
     font-size: 0.85rem;
     font-weight: 600;
-    color: #94a3b8;
-    transition: color 0.3s;
+    color: #94a3b8; /* Gray (inactive) */
+    transition: color 0.3s; /* Smooth color change */
 }
 
+/* Active Step Label */
 .progress-step.active .step-label {
-    color: #2563eb;
+    color: #2563eb; /* Blue */
 }
 
+/* Completed Step Label */
 .progress-step.completed .step-label {
-    color: #10b981;
+    color: #10b981; /* Green */
 }
 
+/* Line Connecting Progress Steps */
+/* Horizontal line between step indicators */
 .progress-line {
-    flex: 1;
+    flex: 1; /* Take up remaining space */
     height: 3px;
-    background: #e2e8f0;
-    margin: 0 0.5rem;
+    background: #e2e8f0; /* Light gray (inactive) */
+    margin: 0 0.5rem; /* Space from circles */
     position: relative;
-    top: -1rem;
-    transition: background 0.3s;
+    top: -1rem; /* Move up to align with circles */
+    transition: background 0.3s; /* Smooth color change */
 }
 
+/* Completed Progress Line */
+/* Green line for completed sections */
 .progress-line.completed {
-    background: #10b981;
+    background: #10b981; /* Green */
 }
 
-/* Form Steps */
+/* ===================================
+   FORM STEPS
+   =================================== */
+
+/* Form Step Container */
+/* Each step of the form (hidden by default) */
 .form-step {
-    display: none;
-    animation: fadeInStep 0.4s ease;
+    display: none; /* Hidden by default */
+    animation: fadeInStep 0.4s ease; /* Slide-in animation when shown */
 }
 
+/* Active Step Display */
+/* Shows the current step */
 .form-step.active {
     display: block;
 }
 
+/* Step Transition Animation */
+/* Slides in from right with fade effect */
 @keyframes fadeInStep {
     from {
         opacity: 0;
-        transform: translateX(20px);
+        transform: translateX(20px); /* Start off to the right */
     }
     to {
         opacity: 1;
-        transform: translateX(0);
+        transform: translateX(0); /* End in normal position */
     }
 }
 
+/* Two-Column Form Row */
+/* Places two form fields side by side */
 .form-row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    gap: 1.5rem; /* Space between fields */
 }
 
+/* Form Field Group */
+/* Container for label and input */
 .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.5rem; /* Space below each field */
 }
 
+/* Form Field Label */
 .form-group label {
-    display: block;
+    display: block; /* Take full width */
     margin-bottom: 0.5rem;
-    color: #334155;
+    color: #334155; /* Dark gray */
     font-weight: 600;
     font-size: 0.95rem;
 }
 
+/* Form Input Fields */
+/* Styling for text inputs, textareas, and select dropdowns */
 .form-group input,
 .form-group textarea,
 .form-group select {
     width: 100%;
     padding: 0.9rem;
-    border: 2px solid #e2e8f0;
-    border-radius: 10px;
+    border: 2px solid #e2e8f0; /* Light gray border */
+    border-radius: 10px; /* Rounded corners */
     font-size: 1rem;
-    font-family: 'Open Sans', sans-serif;
-    transition: all 0.3s ease;
-    box-sizing: border-box;
+    font-family: 'Open Sans', sans-serif; /* Match site font */
+    transition: all 0.3s ease; /* Smooth focus transition */
+    box-sizing: border-box; /* Include padding in width calculation */
 }
 
+/* Focused Input State */
+/* Blue border and glow when field is selected */
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
-    outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    outline: none; /* Remove default browser outline */
+    border-color: #2563eb; /* Blue border */
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); /* Subtle blue glow */
 }
 
+/* Textarea Specific Styling */
 .form-group textarea {
-    resize: vertical;
-    min-height: 150px;
+    resize: vertical; /* Allow vertical resizing only */
+    min-height: 150px; /* Minimum height */
 }
 
-/* Navigation Buttons */
+/* ===================================
+   FORM NAVIGATION BUTTONS
+   =================================== */
+
+/* Button Row Container */
+/* Holds navigation buttons (Previous/Next/Submit) */
 .button-row {
     display: flex;
-    gap: 1rem;
+    gap: 1rem; /* Space between buttons */
 }
 
+/* Navigation Button Base Style */
+/* Previous and Next buttons */
 .nav-button {
-    flex: 1;
+    flex: 1; /* Take equal width */
     padding: 1rem 2rem;
     background: white;
-    color: #2563eb;
-    border: 2px solid #2563eb;
+    color: #2563eb; /* Blue text */
+    border: 2px solid #2563eb; /* Blue border */
     border-radius: 10px;
     font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease; /* Smooth hover effect */
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
+    align-items: center; /* Center content vertically */
+    justify-content: center; /* Center content horizontally */
+    gap: 0.5rem; /* Space between text and icon */
 }
 
+/* Navigation Button Hover Effect */
 .nav-button:hover {
-    background: #f1f5f9;
-    transform: translateY(-2px);
+    background: #f1f5f9; /* Light gray background */
+    transform: translateY(-2px); /* Lift up slightly */
 }
 
+/* Next Button Styling */
+/* Blue gradient background */
 .nav-button.next-button {
-    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    background: linear-gradient(135deg, #2563eb, #3b82f6); /* Blue gradient */
     color: white;
-    border: none;
+    border: none; /* No border */
 }
 
+/* Next Button Hover Effect */
 .nav-button.next-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+    transform: translateY(-3px); /* Lift up more */
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4); /* Blue glowing shadow */
 }
 
+/* Submit Button Styling */
+/* Green gradient for final submission */
 .submit-button {
-    flex: 1;
+    flex: 1; /* Take full width in button row */
     padding: 1rem 2rem;
-    background: linear-gradient(135deg, #10b981, #059669);
+    background: linear-gradient(135deg, #10b981, #059669); /* Green gradient */
     color: white;
     border: none;
     border-radius: 10px;
@@ -371,172 +488,228 @@
     gap: 0.5rem;
 }
 
+/* Submit Button Hover Effect */
+/* Only applies when button is not disabled */
 .submit-button:hover:not(:disabled) {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+    transform: translateY(-3px); /* Lift up */
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4); /* Green glowing shadow */
 }
 
+/* Disabled Submit Button */
+/* Faded appearance when form is invalid */
 .submit-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+    opacity: 0.6; /* Semi-transparent */
+    cursor: not-allowed; /* Show "not allowed" cursor */
 }
 
+/* Button Icon Styling */
+/* Icons within buttons (arrows, etc.) */
 .button-icon {
     font-size: 1.2rem;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease; /* Smooth movement */
 }
 
+/* Next Button Icon Animation */
+/* Moves arrow right on hover */
 .next-button:hover .button-icon {
-    transform: translateX(3px);
+    transform: translateX(3px); /* Slide right */
 }
 
+/* Previous Button Icon Animation */
+/* Moves arrow left on hover */
 .prev-button:hover .button-icon {
-    transform: translateX(-3px);
+    transform: translateX(-3px); /* Slide left */
 }
 
-/* Form Messages */
+/* ===================================
+   FORM MESSAGES
+   =================================== */
+
+/* Success/Error Message Container */
+/* Displays feedback after form submission */
 .form-message {
     padding: 12px 15px;
     margin-bottom: 20px;
     border-radius: 10px;
     font-weight: bold;
-    animation: fadeIn 0.3s ease;
+    animation: fadeIn 0.3s ease; /* Fade in animation */
 }
 
+/* Success Message Styling */
+/* Green gradient background */
 .form-message.success {
-    background: linear-gradient(135deg, #10b981, #059669);
+    background: linear-gradient(135deg, #10b981, #059669); /* Green gradient */
     color: white;
 }
 
+/* Error Message Styling */
+/* Red gradient background */
 .form-message.error {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
+    background: linear-gradient(135deg, #ef4444, #dc2626); /* Red gradient */
     color: white;
 }
 
+/* Message Fade-In Animation */
+/* Slides down and fades in */
 @keyframes fadeIn {
     from { 
         opacity: 0; 
-        transform: translateY(-10px); 
+        transform: translateY(-10px); /* Start above final position */
     }
     to { 
         opacity: 1; 
-        transform: translateY(0); 
+        transform: translateY(0); /* End in normal position */
     }
 }
 
-/* FAQ Section */
+/* ===================================
+   FAQ SECTION
+   =================================== */
+
+/* FAQ Section Container */
 .faq-section {
     max-width: 1200px;
-    margin: 3rem auto 0;
-    padding: 0 2rem 4rem;
+    margin: 3rem auto 0; /* Top margin and centered */
+    padding: 0 2rem 4rem; /* Horizontal padding and bottom spacing */
 }
 
+/* FAQ Section Header */
 .faq-header {
     text-align: center;
     margin-bottom: 3rem;
 }
 
+/* FAQ Title with Gradient Text */
 .faq-header h2 {
     font-size: 2.5rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #2563eb, #3b82f6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    background: linear-gradient(135deg, #2563eb, #3b82f6); /* Blue gradient */
+    -webkit-background-clip: text; /* Clip to text (WebKit) */
+    -webkit-text-fill-color: transparent; /* Transparent text to show gradient */
+    background-clip: text; /* Standard property */
     margin-bottom: 0.5rem;
 }
 
+/* FAQ Subtitle */
 .faq-header p {
     font-size: 1.1rem;
-    color: #64748b;
+    color: #64748b; /* Muted gray */
 }
 
+/* FAQ Items Container */
+/* Vertical stack of FAQ items */
 .faq-container {
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    flex-direction: column; /* Stack items vertically */
+    gap: 1rem; /* Space between items */
 }
 
+/* Individual FAQ Item */
+/* Expandable accordion item */
 .faq-item {
     background: white;
     border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
-    transition: box-shadow 0.3s ease;
+    overflow: hidden; /* Hide content overflow for smooth expand */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06); /* Subtle shadow */
+    transition: box-shadow 0.3s ease; /* Smooth shadow change */
 }
 
+/* FAQ Item Hover Effect */
 .faq-item:hover {
-    box-shadow: 0 5px 20px rgba(37, 99, 235, 0.15);
+    box-shadow: 0 5px 20px rgba(37, 99, 235, 0.15); /* Stronger blue-tinted shadow */
 }
 
+/* FAQ Question Button */
+/* Clickable question that expands/collapses answer */
 .faq-question {
     width: 100%;
     padding: 1.5rem;
     background: none;
     border: none;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Question on left, icon on right */
     align-items: center;
     cursor: pointer;
     font-size: 1.1rem;
     font-weight: 700;
-    color: #1e293b;
+    color: #1e293b; /* Dark text */
     text-align: left;
-    transition: color 0.3s;
+    transition: color 0.3s; /* Smooth color change */
 }
 
+/* Question Hover Effect */
 .faq-question:hover {
-    color: #2563eb;
+    color: #2563eb; /* Blue on hover */
 }
 
+/* FAQ Expand/Collapse Icon */
+/* Plus sign that rotates to X when expanded */
 .faq-icon {
     font-size: 1.5rem;
-    font-weight: 300;
-    color: #2563eb;
-    transition: transform 0.3s ease;
+    font-weight: 300; /* Thin weight */
+    color: #2563eb; /* Blue */
+    transition: transform 0.3s ease; /* Smooth rotation */
 }
 
+/* Rotated Icon for Active FAQ */
+/* Rotates 45 degrees to form an X */
 .faq-item.active .faq-icon {
-    transform: rotate(45deg);
+    transform: rotate(45deg); /* Rotate to X shape */
 }
 
+/* FAQ Answer Container */
+/* Initially hidden, expands when active */
 .faq-answer {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease, padding 0.4s ease;
+    max-height: 0; /* Collapsed state */
+    overflow: hidden; /* Hide content when collapsed */
+    transition: max-height 0.4s ease, padding 0.4s ease; /* Smooth expand/collapse */
 }
 
+/* Expanded FAQ Answer */
 .faq-item.active .faq-answer {
-    max-height: 500px;
-    padding: 0 1.5rem 1.5rem;
+    max-height: 500px; /* Expanded height (adjust as needed) */
+    padding: 0 1.5rem 1.5rem; /* Add padding when expanded */
 }
 
+/* FAQ Answer Text */
 .faq-answer p {
-    color: #64748b;
-    line-height: 1.7;
+    color: #64748b; /* Muted gray */
+    line-height: 1.7; /* Comfortable reading height */
     margin: 0;
 }
 
-/* Mobile Responsive */
+/* ===================================
+   MOBILE RESPONSIVE DESIGN
+   =================================== */
+
+/* Tablet Layout (Below 968px) */
+/* Switches to single column layout */
 @media (max-width: 968px) {
+    /* Stack form and sidebar vertically */
     .contact-container {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Single column */
     }
 
+    /* Move sidebar below form */
     .contact-info-sidebar {
-        order: 2;
+        order: 2; /* Display second */
     }
 
+    /* Form appears first */
     .form-card {
-        order: 1;
+        order: 1; /* Display first */
     }
 }
 
+/* Mobile Layout (Below 768px) */
+/* Further optimizations for smaller screens */
 @media (max-width: 768px) {
+    /* Reduce top padding for mobile navbar */
     .contact-main {
         padding-top: 80px;
     }
 
+    /* Smaller header text on mobile */
     .contact-header h1 {
         font-size: 2rem;
     }
@@ -545,48 +718,59 @@
         font-size: 1.1rem;
     }
 
+    /* Reduce container padding */
     .contact-container {
         padding: 0 1rem 3rem;
     }
 
+    /* Reduce form card padding */
     .form-card {
         padding: 1.5rem;
     }
 
+    /* Stack form fields vertically on mobile */
     .form-row {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Single column */
     }
 
+    /* Reduce info card padding */
     .info-card {
         padding: 1.5rem;
     }
 
+    /* Allow social links to wrap on small screens */
     .social-links-card {
         flex-wrap: wrap;
     }
 
+    /* Reduce FAQ section padding */
     .faq-section {
         padding: 0 1rem 3rem;
     }
 
+    /* Smaller FAQ title */
     .faq-header h2 {
         font-size: 2rem;
     }
 
+    /* Reduce progress bar padding */
     .form-progress {
         padding: 0 0.5rem;
     }
 
+    /* Smaller step labels */
     .step-label {
         font-size: 0.75rem;
     }
 
+    /* Smaller step circles */
     .step-circle {
         width: 40px;
         height: 40px;
         font-size: 1rem;
     }
 
+    /* Stack navigation buttons vertically */
     .button-row {
         flex-direction: column;
     }
